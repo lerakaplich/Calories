@@ -119,6 +119,66 @@ class ClientServiceTest {
     }
 
     @Test
+    void testSaveClient_NullClient() {
+        Client savedClient = clientRepository.save(new Client());
+
+    }
+
+    @Test
+    void testSaveClient_EmptyClientName() {
+        Client client = new Client();
+        client.setClientName("");
+
+        Client savedClient = clientService.saveClient(client);
+
+    }
+
+    @Test
+    void testSaveClient_CacheHitWithValidList() {
+        List<Client> cachedList = new ArrayList<>();
+        cachedList.add(new Client());
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        Client savedClient = clientRepository.save(new Client());
+
+    }
+
+    @Test
+    void testSaveClient_ClientAlreadyExists() {
+        Client existingClient = new Client();
+        existingClient.setClientName("existingClient");
+        when(clientRepository.findByClientName("existingClient")).thenReturn(existingClient);
+
+        Dish dish = new Dish();
+        dish.setDishName("newDish");
+        Client client = new Client();
+        client.setClientName("existingClient");
+        client.setDishList(Arrays.asList(dish));
+
+        Client savedClient = clientRepository.save(new Client());
+
+    }
+
+    @Test
+    void testSaveClient_NewClient() {
+        when(clientRepository.findByClientName("newClient")).thenReturn(null);
+
+        Dish dish = new Dish();
+        dish.setDishName("newDish");
+        Client client = new Client();
+        client.setClientName("newClient");
+        client.setDishList(Arrays.asList(dish));
+
+        Client savedClient = clientService.saveClient(client);
+
+        assertNotNull(savedClient);
+        assertEquals(client, savedClient);
+        verify(clientRepository, times(1)).save(client);
+        verify(clientCache, times(1)).put("newClient", client);
+        verify(dishRepository, never()).findByDishName(anyString());
+    }
+
+    @Test
     void testFindAllClients_CacheHitWithEmptyList() {
         List<ClientDto> cachedList = new ArrayList<>();
         when(clientCache.get("all")).thenReturn(cachedList);
