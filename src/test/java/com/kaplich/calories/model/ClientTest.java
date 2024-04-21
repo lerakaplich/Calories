@@ -12,7 +12,7 @@ class ClientTest {
     private List<Dish> dishList;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         client = new Client();
         client.setId(1L);
         client.setClientName("John Doe");
@@ -38,7 +38,7 @@ class ClientTest {
     }
 
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         Assertions.assertEquals(1L, client.getId());
         Assertions.assertEquals("John Doe", client.getClientName());
         Assertions.assertEquals(70.5, client.getWeight());
@@ -47,7 +47,7 @@ class ClientTest {
     }
 
     @Test
-    public void testCalculateTotalCalories() {
+    void testCalculateTotalCalories() {
         int expectedTotalCalories = 1400; // 1200 + 200
 
         int actualTotalCalories = 0;

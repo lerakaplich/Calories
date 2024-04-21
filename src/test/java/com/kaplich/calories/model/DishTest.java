@@ -13,7 +13,7 @@ class DishTest {
     private List<Product> productList;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         dish = new Dish();
         dish.setId(1L);
         dish.setDishName("Pizza");
@@ -36,7 +36,7 @@ class DishTest {
     }
 
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         Assertions.assertEquals(1L, dish.getId());
         Assertions.assertEquals("Pizza", dish.getDishName());
         Assertions.assertEquals(1200, dish.getCountOfCalories());
@@ -44,7 +44,7 @@ class DishTest {
     }
 
     @Test
-    public void testCalculateTotalProducts() {
+    void testCalculateTotalProducts() {
         int expectedTotalProducts = 2;
 
         int actualTotalProducts = dish.getProductList().size();
