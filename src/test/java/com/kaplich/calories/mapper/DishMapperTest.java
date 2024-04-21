@@ -10,12 +10,13 @@ import com.kaplich.calories.model.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 class DishMapperTest {
-
+    private Product product;
     @Test
     void testToDto() {
         // Arrange
@@ -88,4 +89,5 @@ class DishMapperTest {
         // Assert
         Assertions.assertNull(dish);
     }
+
 }

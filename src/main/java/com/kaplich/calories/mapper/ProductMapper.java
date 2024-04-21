@@ -3,7 +3,7 @@ package com.kaplich.calories.mapper;
 import com.kaplich.calories.dto.ProductDto;
 import com.kaplich.calories.model.Product;
 
-public class ProductMapper {
+public final class ProductMapper {
 
     private ProductMapper() {
     }

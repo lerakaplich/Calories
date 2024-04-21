@@ -7,7 +7,7 @@ import com.kaplich.calories.model.Dish;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientMapper {
+public final class ClientMapper {
 
     private ClientMapper() {
     }
