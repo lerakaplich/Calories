@@ -33,10 +33,6 @@ public class ProductService {
     public ProductDto saveProduct(final ProductDto productDto) {
         Object cachedObject = productCache.get("all");
 
-        if (cachedObject instanceof List<?> list
-                && !list.isEmpty() && list.get(0) instanceof ProductDto) {
-            return (ProductDto) list;
-        }
         if (productRepository.
                 findByProductName(productDto.getProductName()) == null) {
             productRepository.
