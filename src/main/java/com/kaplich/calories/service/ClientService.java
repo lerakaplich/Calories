@@ -2,7 +2,6 @@ package com.kaplich.calories.service;
 
 import com.kaplich.calories.cache.CacheEntity;
 import com.kaplich.calories.dto.ClientDto;
-import com.kaplich.calories.exception.HttpErrorExceptions;
 import com.kaplich.calories.mapper.ClientMapper;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.model.Dish;

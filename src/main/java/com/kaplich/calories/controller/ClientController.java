@@ -4,7 +4,10 @@ import com.kaplich.calories.dto.ClientDto;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.service.ClientService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
 
@@ -44,6 +47,12 @@ public class ClientController {
 
         service.deleteClient(nameOfClient);
     }
-
-
+    @GetMapping("/400_error")
+    public void hardcodedBadRequest() {
+        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+    }
+    @GetMapping("/500_error")
+    public void hardcodedInternalServerError() {
+        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

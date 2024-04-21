@@ -3,7 +3,6 @@ package com.kaplich.calories.service;
 import com.kaplich.calories.cache.CacheEntity;
 import com.kaplich.calories.dto.DishDto;
 import com.kaplich.calories.dto.ProductDto;
-import com.kaplich.calories.exception.HttpErrorExceptions;
 import com.kaplich.calories.mapper.DishMapper;
 import com.kaplich.calories.mapper.ProductMapper;
 import com.kaplich.calories.model.Dish;
