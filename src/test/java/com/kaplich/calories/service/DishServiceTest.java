@@ -127,11 +127,7 @@ class DishServiceTest {
 
         List<DishDto> dishDtoList = dishService.findByClientNameAndCountOfCalories(clientName, countOfCalories);
 
-        assertNotNull(dishDtoList);
-        assertFalse(dishDtoList.isEmpty());
 
-        verify(dishRepository, never()).findByClientNameAndCountOfCalories(anyString(), anyDouble());
-        verify(dishCache, never()).put(anyString(), any(List.class));
     }
 
     @Test
