@@ -41,11 +41,6 @@ public class ClientService {
     }
 
     public Client saveClient(final Client client) {
-
-        if (client == null || client.getClientName() == null
-                || client.getClientName().isEmpty()) {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
         Object cachedObject = clientCache.get("all");
         if (cachedObject instanceof List<?> list && !list.isEmpty()
                 && list.get(0) instanceof Client) {

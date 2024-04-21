@@ -37,8 +37,6 @@ public class DishService {
 
 
     public DishDto saveDish(final DishDto dishDto) {
-        Object cachedObject = dishCache.get("all");
-
         Dish dish = dishRepository.
                 findByDishName(dishDto.getDishName());
 
