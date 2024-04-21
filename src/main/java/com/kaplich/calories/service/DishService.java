@@ -24,7 +24,6 @@ public class DishService {
     private final DishRepository dishRepository;
     private CacheEntity dishCache;
     private CacheEntity clientCache;
-    private static final String ERROR_OCCURRED_MESSAGE = "An error occurred ";
     public List<DishDto> findAllDishes() {
         List<DishDto> dishDtoList = new ArrayList<>();
         for (Dish dish : dishRepository.findAll()) {
@@ -39,11 +38,6 @@ public class DishService {
 
     public DishDto saveDish(final DishDto dishDto) {
         Object cachedObject = dishCache.get("all");
-
-        if (cachedObject instanceof List<?> list && !list.isEmpty()
-                && list.get(0) instanceof DishDto) {
-            return (DishDto) list;
-        }
 
         Dish dish = dishRepository.
                 findByDishName(dishDto.getDishName());

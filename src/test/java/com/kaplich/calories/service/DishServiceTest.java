@@ -19,7 +19,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DishServiceTest {
@@ -58,6 +58,101 @@ class DishServiceTest {
 
         assertEquals(2, result.size());
     }
+
+    @Test
+    void testUpdateDish_ExistingDish() {
+        String dishName = "TestDish";
+        String newDishName = "NewTestDish";
+
+        Dish existingDish = new Dish();
+        existingDish.setDishName(dishName);
+        when(dishRepository.findByDishName(dishName)).thenReturn(existingDish);
+
+        Dish updatedDish = dishService.updateDish(dishName, newDishName);
+
+        assertNotNull(updatedDish);
+        assertEquals(newDishName, updatedDish.getDishName());
+
+    }
+
+    @Test
+    void testUpdateDish_NonExistingDish() {
+        String dishName = "NonExistingDish";
+        String newDishName = "NewTestDish";
+
+        when(dishRepository.findByDishName(dishName)).thenReturn(null);
+
+        Dish updatedDish = dishService.updateDish(dishName, newDishName);
+
+        assertNull(updatedDish);
+
+        verify(dishRepository, times(1)).findByDishName(dishName);
+        verify(dishCache, never()).put(anyString(), any(DishDto.class));
+    }
+
+    @Test
+    void testDeleteDish_ExistingDish() {
+        String dishName = "TestDish";
+
+        Dish existingDish = new Dish();
+        existingDish.setDishName(dishName);
+        when(dishRepository.findByDishName(dishName)).thenReturn(existingDish);
+
+        dishService.deleteDish(dishName);
+
+    }
+
+    @Test
+    void testDeleteDish_NonExistingDish() {
+        String dishName = "NonExistingDish";
+
+        when(dishRepository.findByDishName(dishName)).thenReturn(null);
+
+        dishService.deleteDish(dishName);
+
+        verify(dishRepository, times(1)).findByDishName(dishName);
+        verify(dishRepository, never()).delete(any(Dish.class));
+        verify(dishCache, never()).remove(anyString());
+    }
+
+    @Test
+    void testFindByClientNameAndCountOfCalories_CacheHitWithValidList() {
+        String clientName = "TestClient";
+        double countOfCalories = 100.0;
+
+        String cacheKey = clientName + "_" + countOfCalories;
+        List<DishDto> cachedList = new ArrayList<>();
+        cachedList.add(new DishDto());
+        when(dishCache.get(cacheKey)).thenReturn(cachedList);
+
+        List<DishDto> dishDtoList = dishService.findByClientNameAndCountOfCalories(clientName, countOfCalories);
+
+        assertNotNull(dishDtoList);
+        assertFalse(dishDtoList.isEmpty());
+
+        verify(dishRepository, never()).findByClientNameAndCountOfCalories(anyString(), anyDouble());
+        verify(dishCache, never()).put(anyString(), any(List.class));
+    }
+
+    @Test
+    void testFindByClientNameAndCountOfCalories_CacheMiss() {
+        String clientName = "TestClient";
+        double countOfCalories = 100.0;
+
+        String cacheKey = clientName + "_" + countOfCalories;
+        when(dishCache.get(cacheKey)).thenReturn(null);
+
+        List<Dish> dishList = new ArrayList<>();
+        dishList.add(new Dish());
+        when(dishRepository.findByClientNameAndCountOfCalories(clientName, countOfCalories)).thenReturn(dishList);
+
+        List<DishDto> dishDtoList = dishService.findByClientNameAndCountOfCalories(clientName, countOfCalories);
+
+        assertNotNull(dishDtoList);
+        assertFalse(dishDtoList.isEmpty());
+
+    }
+
 
     @Test
     void testSaveDish() {
