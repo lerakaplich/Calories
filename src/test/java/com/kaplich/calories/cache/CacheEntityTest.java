@@ -32,6 +32,7 @@ class CacheEntityTest {
         String key = "key";
         String value = "value";
 
+
         cacheEntity.put(key, value);
         cacheEntity.remove(key);
 
