@@ -29,7 +29,6 @@ class ProductServiceTest {
     private ProductController productController;
 
 
-
     @Mock
     private ClientRepository clientRepository;
 
@@ -184,8 +183,8 @@ class ProductServiceTest {
         Product savedProduct = productRepository.save(ProductMapper.toEntity(productDto));
 
 
-
     }
+
     @Test
     void testSaveProduct_CacheHitWithValidList() {
         ProductDto productDto = new ProductDto();
@@ -198,6 +197,7 @@ class ProductServiceTest {
         Product savedProduct = productRepository.save(ProductMapper.toEntity(productDto));
 
     }
+
     @Test
     void testFindAllClients_CacheHitWithValidList() {
         List<ClientDto> cachedList = new ArrayList<>();

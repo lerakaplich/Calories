@@ -26,6 +26,7 @@ class CacheEntityTest {
 
         Assertions.assertEquals(value, retrievedValue);
     }
+
     @Test
     void testRemove() {
         String key = "key";
@@ -57,7 +58,7 @@ class CacheEntityTest {
     }
 
     @Test
-   void testSetHashMap() {
+    void testSetHashMap() {
         String key = "key";
         String value = "value";
 

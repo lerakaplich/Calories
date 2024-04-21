@@ -38,7 +38,7 @@ class DishDtoTest {
         String dishName = "Burger";
         double countOfCalories = 900.0;
         List<ProductDto> productList = Arrays.asList(
-                new ProductDto("Bun", 200.0, 78,8, 87),
+                new ProductDto("Bun", 200.0, 78, 8, 87),
                 new ProductDto("Beef Patty", 300.0, 675, 34, 98)
         );
         ClientDto clientDto = new ClientDto("Jane Smith", 60.0, 165.0, Arrays.asList("Salad", "Soup"));
