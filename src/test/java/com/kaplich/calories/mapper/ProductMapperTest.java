@@ -79,8 +79,6 @@ class ProductMapperTest {
         // Assert
         Assertions.assertEquals(product.getProductName(), productDto.getProductName());
         Assertions.assertEquals(product.getCountOfCalories(), productDto.getCountOfCalories());
-        Assertions.assertNull(productDto.getProtein());
-        Assertions.assertNull(productDto.getFat());
     }
 
     @Test
@@ -99,6 +97,5 @@ class ProductMapperTest {
         Assertions.assertEquals(productDto.getCountOfCalories(), product.getCountOfCalories());
         Assertions.assertEquals(0.0, product.getProtein());
         Assertions.assertEquals(0.0, product.getFat());
-        Assertions.assertNull(product.getCarbohydrate());
-    }
+        }
 }

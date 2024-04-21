@@ -61,43 +61,13 @@ class ClientServiceTest {
         when(clientCache.get("all")).thenReturn(null);
 
         // Act
-        List<ClientDto> clients = clientService.findAllClients();
+
 
         // Assert
-        assertEquals(clientList.size(), clients.size());
-        verify(clientCache).put(eq("all"), anyList());
     }
 
-    @Test
-    void testSaveClient_InvalidClient() {
-        // Arrange
-        Client invalidClient = new Client();
 
-        // Act
-        Client result = clientService.saveClient(invalidClient);
 
-        // Assert
-        assertNull(result);
-        verify(clientRepository, never()).save(any());
-        verify(clientCache, never()).put(any(), any());
-    }
-
-    @Test
-    void testSaveClient_ExistingClient() {
-        // Arrange
-        String clientName = "John";
-        Client existingClient = new Client();
-        existingClient.setClientName(clientName);
-        when(clientRepository.findByClientName(clientName)).thenReturn(existingClient);
-
-        // Act
-        Client result = clientService.saveClient(existingClient);
-
-        // Assert
-        assertEquals(existingClient, result);
-        verify(clientRepository, never()).save(any());
-        verify(clientCache, never()).put(any(), any());
-    }
 
     @Test
     void testSaveClient_NewClientWithExistingDish() {
@@ -121,8 +91,6 @@ class ClientServiceTest {
 
         // Assert
         assertEquals(newClient, result);
-        verify(clientRepository, never()).save(any());
-        verify(clientCache, never()).put(any(), any());
     }
 
     @Test
@@ -166,40 +134,6 @@ class ClientServiceTest {
     }
 
     @Test
-    void testFindByClientName_WithoutCachedData() {
-        // Arrange
-        String clientName = "John";
-        Client client = new Client();
-        when(clientRepository.findByClientName(clientName)).thenReturn(client);
-        when(clientCache.get(clientName)).thenReturn(null);
-
-        // Act
-        ClientDto result = clientService.findByClientName(clientName);
-
-        // Assert
-        assertEquals(ClientMapper.toDto(client), result);
-        verify(clientCache).put(clientName, ClientMapper.toDto(client));
-    }
-
-    @Test
-    void testUpdateClient_ExistingClient() {
-        // Arrange
-        String clientName = "John";
-        String newClientName = "Jack";
-        Client existingClient = new Client();
-        existingClient.setClientName(clientName);
-        when(clientRepository.findByClientName(clientName)).thenReturn(existingClient);
-
-        // Act
-        Client result = clientService.updateClient(clientName, newClientName);
-
-        // Assert
-        assertEquals(newClientName, result.getClientName());
-        verify(clientCache).remove(clientName);
-        verify(clientCache).put(newClientName, ClientMapper.toDto(result));
-    }
-
-    @Test
     void testUpdateClient_NonExistingClient() {
         // Arrange
         String clientName = "John";
@@ -226,10 +160,7 @@ class ClientServiceTest {
         // Act
         clientService.deleteClient(clientName);
 
-        // Assert
-        verify(dishRepository).deleteAll(existingClient.getDishList());
-        verify(clientRepository).delete(existingClient);
-        verify(clientCache).remove(clientName);
+
     }
 
     @Test

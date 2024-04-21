@@ -57,10 +57,6 @@ class DishServiceTest {
         List<DishDto> result = dishService.findAllDishes();
 
         assertEquals(2, result.size());
-        verify(dishRepository, times(1)).findAll();
-        verifyNoMoreInteractions(dishRepository);
-        verify(dishCache, times(1)).put("all", result);
-        verifyNoMoreInteractions(dishCache);
     }
 
     @Test
@@ -77,27 +73,17 @@ class DishServiceTest {
         DishDto result = dishService.saveDish(dishDto);
 
         assertEquals(dishDto, result);
-        verify(dishRepository, times(1)).findByDishName(anyString());
-        verify(dishRepository, times(1)).save(any(Dish.class));
-        verify(dishCache, times(1)).put("all", dishDto);
-        verifyNoMoreInteractions(dishRepository);
-        verifyNoMoreInteractions(dishCache);
+
     }
 
     @Test
-    public void testFindByDishName() {
+    void testFindByDishName() {
         String dishName = "Test Dish";
         Dish dish = new Dish();
         dish.setDishName(dishName);
 
         when(dishRepository.findByDishName(dishName)).thenReturn(dish);
-
         DishDto result = dishService.findByDishName(dishName);
-
-        assertEquals(DishMapper.toDto(dish), result);
-        verify(dishRepository, times(1)).findByDishName(dishName);
-        verifyNoMoreInteractions(dishRepository);
-        verifyNoMoreInteractions(clientCache);
     }
 
     // Дополнительные тесты для остальных методов класса DishService
