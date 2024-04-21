@@ -183,5 +183,17 @@ class ProductServiceTest {
 
 
     }
+    @Test
+    void testSaveProduct_CacheHitWithValidList() {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductName("TestProduct");
+
+        List<ProductDto> cachedList = new ArrayList<>();
+        cachedList.add(productDto);
+        when(productCache.get("all")).thenReturn(cachedList);
+
+        Product savedProduct = productRepository.save(ProductMapper.toEntity(productDto));
+
+    }
 
 }
