@@ -67,6 +67,19 @@ class ClientServiceTest {
     }
 
 
+    @Test
+    void testFindAllClientsFromCache() {
+        List<ClientDto> cachedList = new ArrayList<>();
+        cachedList.add(new ClientDto());
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        List<ClientDto> result = clientService.findAllClients();
+
+        assertEquals(cachedList, result);
+        verify(clientRepository, never()).findAll();
+        verify(clientCache, never()).put(eq("all"), any());
+    }
+
 
 
     @Test
