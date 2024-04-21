@@ -4,6 +4,7 @@ import lombok.NonNull;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,22 +16,19 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 @Validated
 public class GlobalExceptionHandler
-extends ResponseEntityExceptionHandler{
-    @ExceptionHandler(HttpClientErrorException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HttpErrorMessage handleClientErrorException() {
-        HttpErrorMessage errorMessage = new HttpErrorMessage("Client error exception");
-        return errorMessage;
-    }
+        extends ResponseEntityExceptionHandler{
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(HttpServerErrorException.class)
-    public HttpErrorMessage handleServerErrorException(HttpServerErrorException ex) {
-        HttpErrorMessage errorMessage = new HttpErrorMessage("Server error exception");
-        return errorMessage;
+    @Override
+    protected ResponseEntity<Object>
+        handleExceptionInternal(Exception ex,
+                                Object body, HttpHeaders headers,
+                                HttpStatusCode statusCode, WebRequest request) {
+        HttpErrorMessage errorMessage = new HttpErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(errorMessage, statusCode);
     }
 }

@@ -23,7 +23,6 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final DishRepository dishRepository;
     private CacheEntity clientCache;
-    private static final String ERROR_OCCURRED_MESSAGE = "An error occurred ";
 
     public List<ClientDto> findAllClients() {
         Object cachedObject = clientCache.get("all");
@@ -71,15 +70,6 @@ public class ClientService {
         }
         return client;
     }
-
-        /*} catch (HttpErrorExceptions.CustomNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new HttpErrorExceptions.
-                    CustomInternalServerErrorException(ERROR_OCCURRED_MESSAGE
-                    + "while saving the client", e);
-        }*/
-
 
     public ClientDto findByClientName(final String nameOfClient) {
         Object cachedObject = clientCache.get(nameOfClient);
