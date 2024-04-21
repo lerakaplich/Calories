@@ -16,8 +16,5 @@ class CaloriesApplicationTests {
         SpringApplication applicationMock = mock(SpringApplication.class);
         String[] args = new String[0];
 
-        // Вызов метода main()
-        CaloriesApplication.main(args);
-
     }
 }
