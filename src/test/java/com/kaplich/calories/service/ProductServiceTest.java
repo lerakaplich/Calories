@@ -129,6 +129,59 @@ class ProductServiceTest {
         ProductDto result = productService.findByProductName(productName);
     }
 
-    // Дополнительные тесты для остальных методов класса ProductService
+    @Test
+    void testSaveProduct_NewProduct() {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductName("TestProduct");
+
+        when(productRepository.findByProductName("TestProduct")).thenReturn(null);
+
+        Product savedProductEntity = new Product();
+        savedProductEntity.setProductName("TestProduct");
+        when(productRepository.save(any(Product.class))).thenReturn(savedProductEntity);
+
+        ProductDto savedProductDto = productService.saveProduct(productDto);
+
+        assertNotNull(savedProductDto);
+        assertEquals("TestProduct", savedProductDto.getProductName());
+
+        verify(productRepository, times(1)).findByProductName("TestProduct");
+        verify(productRepository, times(1)).save(any(Product.class));
+        verify(productCache, times(1)).put("TestProduct", productDto);
+    }
+
+    @Test
+    void testSaveProduct_ExistingProduct() {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductName("TestProduct");
+
+        Product existingProductEntity = new Product();
+        existingProductEntity.setProductName("TestProduct");
+        when(productRepository.findByProductName("TestProduct")).thenReturn(existingProductEntity);
+
+        ProductDto savedProductDto = productService.saveProduct(productDto);
+
+        assertNotNull(savedProductDto);
+        assertEquals("TestProduct", savedProductDto.getProductName());
+
+        verify(productRepository, times(1)).findByProductName("TestProduct");
+        verify(productRepository, never()).save(any(Product.class));
+        verify(productCache, never()).put(anyString(), any(ProductDto.class));
+    }
+
+    @Test
+    void testSaveProduct_CacheHit() {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductName("TestProduct");
+
+        List<ProductDto> cachedList = new ArrayList<>();
+        cachedList.add(productDto);
+        when(productCache.get("all")).thenReturn(cachedList);
+
+        Product savedProduct = productRepository.save(ProductMapper.toEntity(productDto));
+
+
+
+    }
 
 }
