@@ -1,6 +1,7 @@
 package com.kaplich.calories.service;
 
 import com.kaplich.calories.cache.CacheEntity;
+import com.kaplich.calories.controller.ProductController;
 import com.kaplich.calories.dto.ProductDto;
 import com.kaplich.calories.mapper.ProductMapper;
 import com.kaplich.calories.model.Product;
@@ -14,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProductServiceTest {
@@ -22,15 +23,67 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    private ProductController productController;
+
+
     @Mock
     private CacheEntity productCache;
+
 
     @InjectMocks
     private ProductService productService;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+        productController = new ProductController(productService);
+    }
+
+    @Test
+    void testUpdateProduct() {
+        String productName = "Apple";
+        String newProductName = "Orange";
+        Product existingProduct = new Product();
+        existingProduct.setProductName(productName);
+
+        when(productRepository.findByProductName(productName)).thenReturn(existingProduct);
+        when(productService.updateProduct(productName, newProductName)).thenCallRealMethod();
+
+        Product result = productController.updateProduct(productName, newProductName);
+
+        assertNotNull(result);
+        assertEquals(newProductName, result.getProductName());
+    }
+
+    @Test
+    void testUpdateProduct_WithNonExistingProduct() {
+        String productName = "Apple";
+        String newProductName = "Orange";
+
+        Product result = productController.updateProduct(productName, newProductName);
+
+    }
+
+    @Test
+    void testDeleteProduct() {
+        String productName = "Apple";
+        Product productToDelete = new Product();
+        productToDelete.setProductName(productName);
+
+        when(productRepository.findByProductName(productName)).thenReturn(productToDelete);
+        doNothing().when(productRepository).delete(productToDelete);
+
+        productController.deleteProduct(productName);
+    }
+
+    @Test
+    void testDeleteProduct_WithNonExistingProduct() {
+        String productName = "Apple";
+
+        when(productRepository.findByProductName(productName)).thenReturn(null);
+
+        productController.deleteProduct(productName);
+
     }
 
     @Test
