@@ -32,6 +32,11 @@ class ClientServiceTest {
     @Mock
     private CacheEntity clientCache;
 
+
+    private ClientMapper clientMapper;
+
+
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -80,6 +85,64 @@ class ClientServiceTest {
         verify(clientCache, never()).put(eq("all"), any());
     }
 
+
+
+
+
+        @Test
+        void testFindAllClients_CacheHitWithValidList() {
+            List<ClientDto> cachedList = new ArrayList<>();
+            cachedList.add(new ClientDto());
+            when(clientCache.get("all")).thenReturn(cachedList);
+
+            List<ClientDto> clientDtoList = clientService.findAllClients();
+
+            assertNotNull(clientDtoList);
+            assertFalse(clientDtoList.isEmpty());
+
+            verify(clientRepository, never()).findAll();
+            verify(clientCache, never()).put(anyString(), any(List.class));
+        }
+
+        @Test
+        void testFindAllClients_CacheMiss() {
+            when(clientCache.get("all")).thenReturn(null);
+
+            List<Client> clientList = new ArrayList<>();
+            clientList.add(new Client());
+            when(clientRepository.findAll()).thenReturn(clientList);
+
+        }
+
+        @Test
+        void testFindAllClients_CacheHitWithInvalidList() {
+            List<String> cachedList = new ArrayList<>();
+            cachedList.add("invalid");
+            when(clientCache.get("all")).thenReturn(cachedList);
+
+            List<Client> clientList = new ArrayList<>();
+            clientList.add(new Client());
+            when(clientRepository.findAll()).thenReturn(clientList);
+
+
+        }
+
+        @Test
+        void testFindAllClients_CacheHitWithEmptyList() {
+            List<ClientDto> cachedList = new ArrayList<>();
+            when(clientCache.get("all")).thenReturn(cachedList);
+
+            List<Client> clientList = new ArrayList<>();
+            when(clientRepository.findAll()).thenReturn(clientList);
+
+            List<ClientDto> clientDtoList = clientService.findAllClients();
+
+            assertNotNull(clientDtoList);
+            assertTrue(clientDtoList.isEmpty());
+
+            verify(clientRepository, times(1)).findAll();
+            verify(clientCache, times(1)).put("all", clientDtoList);
+        }
 
 
     @Test
