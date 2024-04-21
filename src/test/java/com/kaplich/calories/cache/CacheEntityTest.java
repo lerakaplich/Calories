@@ -26,12 +26,10 @@ class CacheEntityTest {
 
         Assertions.assertEquals(value, retrievedValue);
     }
-
     @Test
     void testRemove() {
         String key = "key";
         String value = "value";
-
 
         cacheEntity.put(key, value);
         cacheEntity.remove(key);
