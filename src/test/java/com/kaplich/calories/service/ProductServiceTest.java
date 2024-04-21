@@ -207,6 +207,7 @@ class ProductServiceTest {
 
     }
 
+
     @Test
     void testFindAllClients_CacheMiss() {
         when(clientCache.get("all")).thenReturn(null);
