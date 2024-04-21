@@ -26,7 +26,17 @@ class CacheEntityTest {
 
         Assertions.assertEquals(value, retrievedValue);
     }
+    @Test
+    void testRemoveOldestEntry_NonEmptyMap() {
+        // Создаем непустую карту данных
+        Map<String, Object> dataCacheMap = new HashMap<>();
+        dataCacheMap.put("key1", "value1");
+        dataCacheMap.put("key2", "value2");
+        cacheEntity.setHashMap(dataCacheMap);
 
+        // Удаляем самый старый элемент
+        cacheEntity.removeOldestEntry();
+    }
     @Test
     void testRemove() {
         String key = "key";
