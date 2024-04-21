@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientTest {
+class ClientTest {
 
     private Client client;
     private List<Dish> dishList;

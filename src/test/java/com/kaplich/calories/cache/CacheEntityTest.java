@@ -7,17 +7,17 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CacheEntityTest {
+class CacheEntityTest {
 
     private CacheEntity cacheEntity;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         cacheEntity = new CacheEntity();
     }
 
     @Test
-    public void testPutAndGet() {
+    void testPutAndGet() {
         String key = "key";
         String value = "value";
 
@@ -28,7 +28,7 @@ public class CacheEntityTest {
     }
 
     @Test
-    public void testRemove() {
+    void testRemove() {
         String key = "key";
         String value = "value";
 
@@ -40,7 +40,7 @@ public class CacheEntityTest {
     }
 
     @Test
-    public void testClear() {
+    void testClear() {
         String key1 = "key1";
         String value1 = "value1";
         String key2 = "key2";
@@ -58,7 +58,7 @@ public class CacheEntityTest {
     }
 
     @Test
-    public void testSetHashMap() {
+   void testSetHashMap() {
         String key = "key";
         String value = "value";
 

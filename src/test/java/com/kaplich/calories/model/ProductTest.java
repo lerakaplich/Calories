@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductTest {
+class ProductTest {
 
     private Product product;
     private List<Dish> dishList;
