@@ -9,7 +9,6 @@ import com.kaplich.calories.repository.ClientRepository;
 import com.kaplich.calories.repository.DishRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -97,6 +96,7 @@ public class ClientService {
 
             }
             clientRepository.delete(clientToDelete);
+
             clientCache.remove(clientToDelete.getClientName());
         }
     }
