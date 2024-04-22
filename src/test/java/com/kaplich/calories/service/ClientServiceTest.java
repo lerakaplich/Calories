@@ -74,14 +74,9 @@ class ClientServiceTest {
         Client client = new Client();
         client.setClientName("John");
 
+
         when(clientCache.get("all")).thenReturn(null);
         when(clientRepository.findByClientName("John")).thenReturn(null);
-
-        // Act
-        Client result = clientRepository.save(client);
-
-        // Assert
-        // assertSame(client, result);
     }
 
     @Test
