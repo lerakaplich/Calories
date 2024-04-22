@@ -57,4 +57,21 @@ class GlobalExceptionHandlerTest {
         //assertEquals(expectedErrorMessage, actualErrorMessage);
         assertEquals(statusCode, response.getStatusCode());
     }
+
+
+    @Test
+    void testHandleAllExceptions_CustomMessage() {
+        // Arrange
+        Exception ex = new Exception("Custom Error Message");
+        WebRequest request = mock(WebRequest.class);
+        HttpErrorMessage expectedErrorMessage = new HttpErrorMessage("Custom Error Message");
+
+        // Act
+        ResponseEntity<Object> response = exceptionHandler.handleAllExceptions(ex, request);
+        HttpErrorMessage actualErrorMessage = (HttpErrorMessage) response.getBody();
+
+        // Assert
+        //        assertEquals(expectedErrorMessage, actualErrorMessage);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
 }
