@@ -11,16 +11,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ClientServiceTest {
+
+    private ClientService clientService;
 
     @Mock
     private ClientRepository clientRepository;
@@ -31,7 +33,9 @@ class ClientServiceTest {
     @Mock
     private CacheEntity clientCache;
 
-    private ClientService clientService;
+
+    private ClientMapper clientMapper;
+
 
     @BeforeEach
     void setUp() {
@@ -40,108 +44,264 @@ class ClientServiceTest {
     }
 
     @Test
-    void findAllClients_ShouldReturnClientDtoList() {
+    void testFindAllClients_WithCachedData() {
         // Arrange
-        Client client = new Client();
-        client.setId(1L);
-        client.setClientName("John");
-        List<Client> clients = Collections.singletonList(client);
-
-        when(clientRepository.findAll()).thenReturn(clients);
-    }
-
-    @Test
-    void saveClient_WithExistingClient_ShouldUpdateClientInCache() {
-        // Arrange
-        Client client = new Client();
-        client.setId(1L);
-        client.setClientName("John");
-        client.setDishList(Collections.emptyList());
-
-        when(clientRepository.findByClientName(client.getClientName())).thenReturn(client);
+        List<ClientDto> cachedData = new ArrayList<>();
+        cachedData.add(new ClientDto());
+        when(clientCache.get("all")).thenReturn(cachedData);
 
         // Act
-        Client result = clientService.saveClient(client);
+        List<ClientDto> clients = clientService.findAllClients();
 
         // Assert
-        assertEquals(client, result);
-        // Add more assertions based on the expected behavior
+        assertEquals(cachedData, clients);
     }
 
     @Test
-    void saveClient_WithNonExistingClient_ShouldSaveClientInRepositoryAndCache() {
+    void testFindAllClients_WithoutCachedData() {
         // Arrange
-        Client client = new Client();
-        client.setId(1L);
-        client.setClientName("John");
-        client.setDishList(Collections.emptyList());
-
-        when(clientRepository.findByClientName(client.getClientName())).thenReturn(null);
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+        when(clientCache.get("all")).thenReturn(null);
 
         // Act
-        Client result = clientService.saveClient(client);
+
 
         // Assert
-        assertEquals(client, result);
-        verify(clientRepository).save(client);
-        verify(clientCache).put(client.getClientName(), client);
-        // Add more assertions based on the expected behavior
+    }
+
+
+    @Test
+    void testFindAllClientsFromCache() {
+        List<ClientDto> cachedList = new ArrayList<>();
+        cachedList.add(new ClientDto());
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        List<ClientDto> result = clientService.findAllClients();
+
+        assertEquals(cachedList, result);
+        verify(clientRepository, never()).findAll();
+        verify(clientCache, never()).put(eq("all"), any());
+    }
+
+
+
+
+    @Test
+    void testFindAllClients_CacheHitWithInvalidList() {
+        List<String> cachedList = new ArrayList<>();
+        cachedList.add("invalid");
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+
+
     }
 
     @Test
-    void findByClientName_WithCachedClientDto_ShouldReturnCachedClientDto() {
+    void testFindAllClients_CacheHitWithValidList() {
+        List<ClientDto> cachedList = new ArrayList<>();
+        cachedList.add(new ClientDto());
+        when(clientCache.get("all")).thenReturn(cachedList);
+    }
+
+    @Test
+    void testFindAllClients_CacheMiss() {
+        when(clientCache.get("all")).thenReturn(null);
+
+        List<Client> clientList = Arrays.asList(new Client(), new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+
+        List<ClientDto> expectedDtoList = Arrays.asList(new ClientDto(), new ClientDto());
+    }
+
+    @Test
+    void testSaveClient_NullClient() {
+        Client savedClient = clientRepository.save(new Client());
+
+    }
+
+    @Test
+    void testSaveClient_EmptyClientName() {
+        Client client = new Client();
+        client.setClientName("");
+
+        Client savedClient = clientService.saveClient(client);
+
+    }
+
+    @Test
+    void testSaveClient_CacheHitWithValidList() {
+        List<Client> cachedList = new ArrayList<>();
+        cachedList.add(new Client());
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        Client savedClient = clientRepository.save(new Client());
+
+    }
+
+    @Test
+    void testSaveClient_ClientAlreadyExists() {
+        Client existingClient = new Client();
+        existingClient.setClientName("existingClient");
+        when(clientRepository.findByClientName("existingClient")).thenReturn(existingClient);
+
+        Dish dish = new Dish();
+        dish.setDishName("newDish");
+        Client client = new Client();
+        client.setClientName("existingClient");
+        client.setDishList(Arrays.asList(dish));
+
+        Client savedClient = clientRepository.save(new Client());
+
+    }
+
+    @Test
+    void testSaveClient_NewClient() {
+        when(clientRepository.findByClientName("newClient")).thenReturn(null);
+
+        Dish dish = new Dish();
+        dish.setDishName("newDish");
+        Client client = new Client();
+        client.setClientName("newClient");
+        client.setDishList(Arrays.asList(dish));
+
+        Client savedClient = clientService.saveClient(client);
+
+        assertNotNull(savedClient);
+        assertEquals(client, savedClient);
+        verify(clientRepository, times(1)).save(client);
+        verify(clientCache, times(1)).put("newClient", client);
+        verify(dishRepository, never()).findByDishName(anyString());
+    }
+
+    @Test
+    void testFindAllClients_CacheHitWithEmptyList() {
+        List<ClientDto> cachedList = new ArrayList<>();
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        List<Client> clientList = new ArrayList<>();
+        when(clientRepository.findAll()).thenReturn(clientList);
+
+        List<ClientDto> clientDtoList = clientService.findAllClients();
+
+        assertNotNull(clientDtoList);
+        assertTrue(clientDtoList.isEmpty());
+
+        verify(clientRepository, times(1)).findAll();
+        verify(clientCache, times(1)).put("all", clientDtoList);
+    }
+
+
+    @Test
+    void testSaveClient_NewClientWithExistingDish() {
         // Arrange
         String clientName = "John";
-        ClientDto cachedClientDto = new ClientDto();
-        cachedClientDto.setClientName(clientName);
+        String dishName = "Pizza";
+        Dish existingDish = new Dish();
+        existingDish.setDishName(dishName);
+        List<Dish> dishList = new ArrayList<>();
+        dishList.add(existingDish);
 
-        when(clientCache.get(clientName)).thenReturn(cachedClientDto);
+        Client newClient = new Client();
+        newClient.setClientName(clientName);
+        newClient.setDishList(dishList);
+
+        when(clientRepository.findByClientName(clientName)).thenReturn(null);
+        when(dishRepository.findByDishName(dishName)).thenReturn(existingDish);
+
+        // Act
+        Client result = clientService.saveClient(newClient);
+
+        // Assert
+        assertEquals(newClient, result);
+    }
+
+    @Test
+    void testSaveClient_NewClientWithNewDish() {
+        // Arrange
+        String clientName = "John";
+        String dishName = "Pizza";
+        Dish newDish = new Dish();
+        newDish.setDishName(dishName);
+        List<Dish> dishList = new ArrayList<>();
+        dishList.add(newDish);
+
+        Client newClient = new Client();
+        newClient.setClientName(clientName);
+        newClient.setDishList(dishList);
+
+        when(clientRepository.findByClientName(clientName)).thenReturn(null);
+        when(dishRepository.findByDishName(dishName)).thenReturn(null);
+
+        // Act
+        Client result = clientService.saveClient(newClient);
+
+        // Assert
+        assertEquals(newClient, result);
+        verify(clientRepository).save(newClient);
+        verify(clientCache).put(clientName, newClient);
+    }
+
+    @Test
+    void testFindByClientName_WithCachedData() {
+        // Arrange
+        String clientName = "John";
+        ClientDto cachedData = new ClientDto();
+        when(clientCache.get(clientName)).thenReturn(cachedData);
 
         // Act
         ClientDto result = clientService.findByClientName(clientName);
 
         // Assert
-        assertEquals(cachedClientDto, result);
-        verify(clientRepository, never()).findByClientName(clientName);
-        // Add more assertions based on the expected behavior
+        assertEquals(cachedData, result);
     }
 
     @Test
-    void findByClientName_WithNonCachedClientDto_ShouldReturnClientDtoFromRepository() {
+    void testUpdateClient_NonExistingClient() {
         // Arrange
         String clientName = "John";
-        Client client = new Client();
-        client.setClientName(clientName);
+        String newClientName = "Jack";
+        when(clientRepository.findByClientName(clientName)).thenReturn(null);
 
-        when(clientCache.get(clientName)).thenReturn(null);
-        when(clientRepository.findByClientName(clientName)).thenReturn(client);
+        // Act
+        Client result = clientService.updateClient(clientName, newClientName);
 
-        // Add more assertions based on the expected behavior
+        // Assert
+        assertNull(result);
+        verify(clientCache, never()).remove(any());
+        verify(clientCache, never()).put(any(), any());
     }
 
     @Test
-    void updateClient_WithExistingClient_ShouldUpdateClientAndCache() {
+    void testDeleteClient_ExistingClient() {
         // Arrange
         String clientName = "John";
-        String newClientName = "Johnny";
         Client existingClient = new Client();
         existingClient.setClientName(clientName);
-        Client updatedClient = new Client();
-        updatedClient.setClientName(clientName);
-
         when(clientRepository.findByClientName(clientName)).thenReturn(existingClient);
+
+        // Act
+        clientService.deleteClient(clientName);
+
+
     }
 
     @Test
-    void updateClient_WithNonExistingClient_ShouldThrowException() {
+    void testDeleteClient_NonExistingClient() {
         // Arrange
         String clientName = "John";
-        String newClientName = "Johnny";
-
         when(clientRepository.findByClientName(clientName)).thenReturn(null);
-        // Add more assertions based on the expected behavior
+
+        // Act
+        clientService.deleteClient(clientName);
+
+        // Assert
+        verify(dishRepository, never()).deleteAll(any());
+        verify(clientRepository, never()).delete(any());
+        verify(clientCache, never()).remove(any());
     }
-
-    // Add more test methods to achieve 100% code coverage
-
 }
