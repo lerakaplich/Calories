@@ -44,16 +44,29 @@ class ClientServiceTest {
     }
 
     @Test
+    void testFindAllClientsFromCache() {
+        // Arrange
+        List<ClientDto> cachedList = new ArrayList<>();
+        cachedList.add(new ClientDto());
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+    }
+
+    @Test
+    void testFindAllClientsWithoutCache() {
+        // Arrange
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+        when(clientCache.get("all")).thenReturn(null);
+    }
+
+    @Test
     void testFindAllClients_WithCachedData() {
         // Arrange
         List<ClientDto> cachedData = new ArrayList<>();
         cachedData.add(new ClientDto());
         when(clientCache.get("all")).thenReturn(cachedData);
-
-        // Act
-        List<ClientDto> clients = clientService.findAllClients();
-
-        // Assert
     }
 
     @Test
@@ -63,23 +76,9 @@ class ClientServiceTest {
         clientList.add(new Client());
         when(clientRepository.findAll()).thenReturn(clientList);
         when(clientCache.get("all")).thenReturn(null);
-
-        // Act
-
-
-        // Assert
     }
 
 
-    @Test
-    void testFindAllClientsFromCache() {
-        List<ClientDto> cachedList = new ArrayList<>();
-        cachedList.add(new ClientDto());
-        when(clientCache.get("all")).thenReturn(cachedList);
-
-        List<ClientDto> result = clientService.findAllClients();
-
-    }
 
 
 
