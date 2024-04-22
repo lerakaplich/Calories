@@ -24,12 +24,6 @@ public class ClientService {
     private CacheEntity clientCache;
 
     public List<ClientDto> findAllClients() {
-        Object cachedObject = clientCache.get("all");
-        if (cachedObject instanceof List<?> list
-                && !list.isEmpty() && list.get(0) instanceof ClientDto) {
-            return (List<ClientDto>) list;
-        }
-
         List<ClientDto> clientDtoList = new ArrayList<>();
         for (Client client : clientRepository.findAll()) {
             ClientDto clientDto = ClientMapper.toDto(client);
@@ -40,13 +34,7 @@ public class ClientService {
     }
 
     public Client saveClient(final Client client) {
-        Object cachedObject = clientCache.get("all");
-        if (cachedObject instanceof List<?> list && !list.isEmpty()
-                && list.get(0) instanceof Client) {
-            return (Client) list;
-        }
-
-        Client clientT = clientRepository.
+     Client clientT = clientRepository.
                 findByClientName(client.getClientName());
         if (clientT != null) {
             for (Dish dish : client.getDishList()) {
