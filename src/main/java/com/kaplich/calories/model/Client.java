@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,6 +38,6 @@ public class Client {
     private double height;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id")
-    private List<Dish> dishList;
+    private List<Dish> dishList = new ArrayList<>();
 
 }

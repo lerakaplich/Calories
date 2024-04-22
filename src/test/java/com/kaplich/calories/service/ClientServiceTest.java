@@ -86,17 +86,61 @@ class ClientServiceTest {
         clientList.add(new Client());
         clientList.add(new Client());
         when(clientRepository.findAll()).thenReturn(clientList);
-        //when(clientMapper.)
+    }
+    @Test
+    void bulkSaveClients_ExistingClients() {
+        // Arrange
+        ArrayList<Client> clientList = createClientListWithExistingClients();
+        when(clientRepository.findByClientName(any())).thenReturn(new Client());
+        when(dishRepository.findByDishName(any())).thenReturn(null);
 
-        ClientService clientService = new ClientService(clientRepository, dishRepository, clientCache);
+        // Act
+        clientService.bulkSaveClients(clientList);
 
     }
 
+    @Test
+    void bulkSaveClients_NewClients() {
+        // Arrange
+        ArrayList<Client> clientList = createClientListWithNewClients();
+        when(clientRepository.findByClientName(any())).thenReturn(null);
 
+        // Act
+        clientService.bulkSaveClients(clientList);
 
+        // Assert
+        verify(clientRepository, times(2)).findByClientName(any());
+        verify(dishRepository, never()).findByDishName(any());
+        verify(clientRepository, times(1)).saveAll(any());
+    }
 
+    private ArrayList<Client> createClientListWithExistingClients() {
+        ArrayList<Client> clientList = new ArrayList<>();
 
+        Client client1 = new Client();
+        client1.setClientName("Client1");
+        clientList.add(client1);
 
+        Client client2 = new Client();
+        client2.setClientName("Client2");
+        clientList.add(client2);
+
+        return clientList;
+    }
+
+    private ArrayList<Client> createClientListWithNewClients() {
+        ArrayList<Client> clientList = new ArrayList<>();
+
+        Client client3 = new Client();
+        client3.setClientName("Client3");
+        clientList.add(client3);
+
+        Client client4 = new Client();
+        client4.setClientName("Client4");
+        clientList.add(client4);
+
+        return clientList;
+    }
     @Test
     void testFindAllClients_CacheHitWithInvalidList() {
         List<String> cachedList = new ArrayList<>();
