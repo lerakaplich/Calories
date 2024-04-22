@@ -2,7 +2,9 @@ package com.kaplich.calories.service;
 
 import com.kaplich.calories.cache.CacheEntity;
 import com.kaplich.calories.dto.ClientDto;
+import com.kaplich.calories.dto.DishDto;
 import com.kaplich.calories.mapper.ClientMapper;
+import com.kaplich.calories.mapper.DishMapper;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.model.Dish;
 import com.kaplich.calories.repository.ClientRepository;
@@ -87,6 +89,72 @@ public class ClientService {
             clientCache.remove(clientToDelete.getClientName());
         }
     }
+
+
+    /*public void bulkSaveClients(ArrayList<Client> clientList) {
+        List<Client> clientListToSave = new ArrayList<>();
+        for (Client client : clientList) {
+            Client existingClient = clientRepository.findByClientName(client.getClientName());
+            if (existingClient != null) {
+                for (Dish dish : client.getDishList()) {
+                    Dish existingDish = dishRepository.findByDishName(dish.getDishName());
+                    if (existingDish == null) {
+                        dish.setClient(existingClient);
+                        existingClient.getDishList().add(dish);
+                    }
+                }
+                clientCache.remove(client.getClientName());
+                clientCache.put("all", ClientMapper.toDto(existingClient));
+                clientListToSave.add(existingClient);
+                //clientRepository.save(existingClient);
+            } else {
+
+                clientCache.put(client.getClientName(), client);
+            }
+        }
+        clientRepository.saveAll(clientListToSave);
+    }*/
+    public void bulkSaveClients(ArrayList<Client> clientList) {
+        List<Client> clientListToSave = new ArrayList<>();
+        for (Client client : clientList) {
+            Client existingClient = clientRepository.findByClientName(client.getClientName());
+            if (existingClient != null) {
+                for (Dish dish : client.getDishList()) {
+                    Dish existingDish = dishRepository.findByDishName(dish.getDishName());
+                    if (existingDish == null) {
+                        dish.setClient(existingClient);
+                        existingClient.getDishList().add(dish);
+                    }
+                }
+                clientCache.remove(client.getClientName());
+                clientCache.put("all", ClientMapper.toDto(existingClient));
+
+            } else {
+                clientCache.put(client.getClientName(), client);
+                clientListToSave.add(client);
+            }
+        }
+        clientRepository.saveAll(clientListToSave);
+    }
+    /*public Client saveClient(final Client client) {
+     Client clientT = clientRepository.
+                findByClientName(client.getClientName());
+        if (clientT != null) {
+            for (Dish dish : client.getDishList()) {
+                Dish dishT = dishRepository.
+                        findByDishName(dish.getDishName());
+                if (dishT == null) {
+                    client.getDishList().add(dish);
+                    clientCache.remove(client.getClientName());
+                    clientCache.put("all", ClientMapper.toDto(client));
+                }
+            }
+        } else {
+            clientRepository.save(client);
+            clientCache.put(client.getClientName(), client);
+        }
+        return client;
+    }*/
 
 }
 

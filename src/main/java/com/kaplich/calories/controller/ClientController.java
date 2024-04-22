@@ -4,6 +4,7 @@ import com.kaplich.calories.aop.Logging;
 import com.kaplich.calories.dto.ClientDto;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.service.ClientService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,9 +27,6 @@ import java.util.List;
 @RequestMapping("/api/v1/clients")
 public class ClientController {
     private final ClientService service;
-
-
-
     @GetMapping
     public List<ClientDto> findAllClients() {
 
@@ -64,5 +64,9 @@ public class ClientController {
     @GetMapping("/500_error")
     public void hardcodedInternalServerError() {
         throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @PostMapping("/bulkSave")
+    public void bulkSaveClients(@RequestBody ArrayList<Client> clientList){
+        service.bulkSaveClients(clientList);
     }
 }

@@ -16,4 +16,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     void delete(Client entity);
 
+    @Override
+    <S extends Client> List<S> saveAll(Iterable<S> entities);
 }
