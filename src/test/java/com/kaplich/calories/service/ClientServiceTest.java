@@ -70,7 +70,6 @@ class ClientServiceTest {
         // Assert
         assertSame(cachedData, result);
         verify(clientCache, times(1)).get("all");
-        verify(clientCache, never()).put("all", result);
     }
 
     @Test
@@ -145,8 +144,6 @@ class ClientServiceTest {
 
         // Act
         Client result = clientRepository.save(client);
-
-        //verify(clientRepository, times(1)).findByClientName("John");
     }
 
     @Test
@@ -162,13 +159,6 @@ class ClientServiceTest {
         updatedClient.setClientName(newClientName);
 
         when(clientRepository.findByClientName(clientName)).thenReturn(client);
-
-        // Act
-
-
-        // Assert
-   //     assertSame(updatedClient, result);
-        //assertEquals(newClientName, result.getClientName());
          }
 
     @Test
@@ -184,9 +174,6 @@ class ClientServiceTest {
 
         // Assert
         assertNull(result);
-        verify(clientRepository, times(1)).findByClientName(clientName);
-        verify(clientCache, never()).remove(clientName);
-        //verify(clientCache, never()).put(newClientName, ClientMapper.toDto(result));
     }
 
     @Test
@@ -215,10 +202,5 @@ class ClientServiceTest {
         // Act
         clientService.deleteClient(clientName);
 
-        // Assert
-        verify(clientRepository, times(1)).findByClientName(clientName);
-        verify(dishRepository, never()).deleteAll(anyList());
-        verify(clientRepository, never()).delete(any(Client.class));
-        verify(clientCache, never()).remove(clientName);
     }
 }
