@@ -9,6 +9,7 @@ import com.kaplich.calories.repository.ClientRepository;
 import com.kaplich.calories.repository.DishRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ class ClientServiceTest {
     @Mock
     private CacheEntity clientCache;
 
-
+    @Mock
     private ClientMapper clientMapper;
 
 
@@ -77,6 +78,18 @@ class ClientServiceTest {
         clientService.findAllClients();
         when(clientRepository.findAll()).thenReturn(clientList);
         when(clientCache.get("all")).thenReturn(null);
+    }
+    @Test
+    void testMappingClientsToClientDtoList() {
+        // Arrange
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(new Client());
+        clientList.add(new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+        //when(clientMapper.)
+
+        ClientService clientService = new ClientService(clientRepository, dishRepository, clientCache);
+
     }
 
 
