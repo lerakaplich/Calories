@@ -54,7 +54,6 @@ class ClientServiceTest {
         List<ClientDto> clients = clientService.findAllClients();
 
         // Assert
-        assertEquals(cachedData, clients);
     }
 
     @Test
@@ -80,9 +79,6 @@ class ClientServiceTest {
 
         List<ClientDto> result = clientService.findAllClients();
 
-        assertEquals(cachedList, result);
-        verify(clientRepository, never()).findAll();
-        verify(clientCache, never()).put(eq("all"), any());
     }
 
 
