@@ -84,7 +84,6 @@ public class ClientService {
 
             }
             clientRepository.delete(clientToDelete);
-
             clientCache.remove(clientToDelete.getClientName());
         }
     }

@@ -53,7 +53,7 @@ class GlobalExceptionHandlerTest {
         HttpErrorMessage actualErrorMessage = (HttpErrorMessage) response.getBody();
 
         // Assert
-        //assertEquals(expectedErrorMessage, actualErrorMessage);
+        // nbassertEquals(expectedErrorMessage, actualErrorMessage);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 }
