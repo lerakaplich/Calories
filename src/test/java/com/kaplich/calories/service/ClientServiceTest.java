@@ -74,6 +74,7 @@ class ClientServiceTest {
         // Arrange
         List<Client> clientList = new ArrayList<>();
         clientList.add(new Client());
+        clientService.findAllClients();
         when(clientRepository.findAll()).thenReturn(clientList);
         when(clientCache.get("all")).thenReturn(null);
     }
