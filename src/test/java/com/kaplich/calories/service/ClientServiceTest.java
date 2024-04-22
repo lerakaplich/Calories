@@ -34,9 +34,6 @@ class ClientServiceTest {
     @Mock
     private CacheEntity clientCache;
 
-    @Mock
-    private ClientMapper clientMapper;
-
 
     @BeforeEach
     void setUp() {

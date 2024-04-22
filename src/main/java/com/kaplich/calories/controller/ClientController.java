@@ -1,10 +1,8 @@
 package com.kaplich.calories.controller;
 
-import com.kaplich.calories.aop.Logging;
 import com.kaplich.calories.dto.ClientDto;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.service.ClientService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
