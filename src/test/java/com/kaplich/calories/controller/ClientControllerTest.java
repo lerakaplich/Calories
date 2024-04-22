@@ -11,11 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ClientControllerTest {
@@ -33,68 +32,85 @@ class ClientControllerTest {
 
     @Test
     void testFindAllClients() {
-        List<ClientDto> expectedClients = new ArrayList<>();
+        // Arrange
+        List<ClientDto> expectedClients = Collections.singletonList(new ClientDto());
         when(clientService.findAllClients()).thenReturn(expectedClients);
 
-        List<ClientDto> result = clientController.findAllClients();
+        // Act
+        List<ClientDto> actualClients = clientController.findAllClients();
 
-        assertEquals(expectedClients, result);
-        verify(clientService, times(1)).findAllClients();
+        // Assert
+        assertEquals(expectedClients, actualClients);
+        verify(clientService).findAllClients();
     }
 
     @Test
     void testSaveClient() {
+        // Arrange
         Client client = new Client();
         Client savedClient = new Client();
         when(clientService.saveClient(client)).thenReturn(savedClient);
 
-        Client result = clientController.saveClient(client);
+        // Act
+        Client actualClient = clientController.saveClient(client);
 
-        assertEquals(savedClient, result);
-        verify(clientService, times(1)).saveClient(client);
+        // Assert
+        assertEquals(savedClient, actualClient);
+        verify(clientService).saveClient(client);
     }
 
     @Test
     void testFindByClientName() {
-        String clientName = "John Doe";
+        // Arrange
+        String clientName = "John";
         ClientDto expectedClientDto = new ClientDto();
         when(clientService.findByClientName(clientName)).thenReturn(expectedClientDto);
 
-        ClientDto result = clientController.findByClientName(clientName);
+        // Act
+        ClientDto actualClientDto = clientController.findByClientName(clientName);
 
-        assertEquals(expectedClientDto, result);
-        verify(clientService, times(1)).findByClientName(clientName);
+        // Assert
+        assertEquals(expectedClientDto, actualClientDto);
+        verify(clientService).findByClientName(clientName);
     }
 
     @Test
     void testUpdateClient() {
-        String clientName = "John Doe";
-        String newClientName = "Jane Smith";
+        // Arrange
+        String clientName = "John";
+        String newClientName = "Jane";
         Client updatedClient = new Client();
         when(clientService.updateClient(clientName, newClientName)).thenReturn(updatedClient);
 
-        Client result = clientController.updateClient(clientName, newClientName);
+        // Act
+        Client actualClient = clientController.updateClient(clientName, newClientName);
 
-        assertEquals(updatedClient, result);
-        verify(clientService, times(1)).updateClient(clientName, newClientName);
+        // Assert
+        assertEquals(updatedClient, actualClient);
+        verify(clientService).updateClient(clientName, newClientName);
     }
 
     @Test
     void testDeleteClient() {
-        String clientName = "John Doe";
+        // Arrange
+        String clientName = "John";
 
-        clientController.deleteClient(clientName);
+        // Act
+        assertDoesNotThrow(() -> clientController.deleteClient(clientName));
 
-        verify(clientService, times(1)).deleteClient(clientName);
+        // Assert
+        verify(clientService).deleteClient(clientName);
     }
 
     @Test
     void testHardcodedBadRequest() {
-        assertThrows(HttpClientErrorException.class, () -> clientController.hardcodedBadRequest());
+        // Arrange & Act & Assert
+        assertThrows(HttpClientErrorException.class, clientController::hardcodedBadRequest);
     }
 
     @Test
     void testHardcodedInternalServerError() {
-        assertThrows(HttpServerErrorException.class, () -> clientController.hardcodedInternalServerError());
+        // Arrange & Act & Assert
+        assertThrows(HttpServerErrorException.class, clientController::hardcodedInternalServerError);
     }
 }
