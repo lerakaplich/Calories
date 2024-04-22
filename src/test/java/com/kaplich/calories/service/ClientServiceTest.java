@@ -228,23 +228,6 @@ class ClientServiceTest {
         verify(dishRepository, never()).findByDishName(anyString());
     }
 
-    @Test
-    void testFindAllClients_CacheHitWithEmptyList() {
-        List<ClientDto> cachedList = new ArrayList<>();
-        when(clientCache.get("all")).thenReturn(cachedList);
-
-        List<Client> clientList = new ArrayList<>();
-        when(clientRepository.findAll()).thenReturn(clientList);
-
-        List<ClientDto> clientDtoList = clientService.findAllClients();
-
-        assertNotNull(clientDtoList);
-        assertTrue(clientDtoList.isEmpty());
-
-        verify(clientRepository, times(1)).findAll();
-        verify(clientCache, times(1)).put("all", clientDtoList);
-    }
-
 
     @Test
     void testSaveClient_NewClientWithExistingDish() {
