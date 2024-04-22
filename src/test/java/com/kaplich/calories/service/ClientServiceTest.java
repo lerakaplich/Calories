@@ -114,6 +114,27 @@ class ClientServiceTest {
     }
 
     @Test
+    public void testDeleteClientWithDishes() {
+        // Arrange
+        String clientName = "John";
+        Client clientToDelete = new Client(1L, clientName, 44.9, 55.6, null);
+        List<Dish> dishList = new ArrayList<>();
+        dishList.add(new Dish(null, 2L, "dish", 6.5, clientToDelete));
+        clientToDelete.setDishList(dishList);
+
+        when(clientRepository.findByClientName(clientName)).thenReturn(clientToDelete);
+
+        // Act
+        ClientService clientService = new ClientService(clientRepository, dishRepository, clientCache);
+        clientService.deleteClient(clientName);
+
+        // Assert
+        verify(dishRepository, times(1)).deleteAll(dishList);
+        verify(clientRepository, times(1)).delete(clientToDelete);
+        verify(clientCache, times(1)).remove(clientName);
+    }
+
+    @Test
     void testFindByClientName_CachedDataAvailable_ReturnsCachedData() {
         // Arrange
         ClientDto cachedData = new ClientDto();
