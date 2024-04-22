@@ -23,6 +23,9 @@ The developed application provides detailed information about products, dishes a
 - [Task 1](#task-1)
 - [Task 2](#task-2)
 - [Task 3](#task-3)
+- [Task 4](#task-4)
+- [Task 5](#task-5)
+- [Task 6](#task-6)
 - [HTTP requests](#HTTP-requests)
 - [SonarCloud](#sonarCloud)
 ***
@@ -42,6 +45,22 @@ The developed application provides detailed information about products, dishes a
 ## Task 3
 1. Add an endpoint to the GET project (it should be useful) with the parameter(s). The data must be obtained from the database using a "custom" query (@Query) with parameter(s) to the nested entity.
 2. Add the simplest cache in the form of an in-memory Map (as a separate bin).
+***
+
+## Task 4
+1. Handle 400 and 500 errors.
+2. Add logging of actions and errors (aspects).
+3. Connect Swagger & CheckStyle. To remove stylistic errors.
+***
+
+## Task 5
+1. Add a POST method to work with a list of parameters (passed in the request body) for bulk operations, organize the service using Java 8 (Stream API, lambda expressions).
+2. Unit test coverage by >80% (business logic).
+***
+
+## Task 6
+1. Add a service for counting requests to the main service. The counter must be implemented as a separate class, access to which must be synchronized.
+2. Using jmeter/postman or any other means, configure the load test and make sure that the request counter is working correctly under heavy load.
 ***
 
 ## [SonarCloud](https://sonarcloud.io/summary/overall?id=lerakaplich_Calories)
