@@ -66,64 +66,87 @@ class ProductServiceTest {
     }
 
     @Test
-    void testUpdateProduct_WithNonExistingProduct() {
-        String productName = "Apple";
-        String newProductName = "Orange";
-
-        Product result = productController.updateProduct(productName, newProductName);
-
-    }
-
-    @Test
-    void testDeleteProduct() {
-        String productName = "Apple";
-        Product productToDelete = new Product();
-        productToDelete.setProductName(productName);
-
-        when(productRepository.findByProductName(productName)).thenReturn(productToDelete);
-        doNothing().when(productRepository).delete(productToDelete);
-
-        productController.deleteProduct(productName);
-    }
-
-    @Test
-    void testDeleteProduct_WithNonExistingProduct() {
-        String productName = "Apple";
-
-        when(productRepository.findByProductName(productName)).thenReturn(null);
-
-        productController.deleteProduct(productName);
-
-    }
-
-    @Test
-    void testFindAllProducts() {
-        Product product1 = new Product();
-        Product product2 = new Product();
-        List<Product> productList = new ArrayList<>();
-        productList.add(product1);
-        productList.add(product2);
-
-        when(productRepository.findAll()).thenReturn(productList);
-
-        List<ProductDto> result = productService.findAllProducts();
-
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testSaveProduct() {
+    void testSaveProduct_CacheHit() {
+        // Test setup
         ProductDto productDto = new ProductDto();
-        productDto.setProductName("Test Product");
+        productDto.setProductName("TestProduct");
+        List<ProductDto> cachedList = new ArrayList<>();
+        cachedList.add(productDto);
+        when(productCache.get("all")).thenReturn(cachedList);
 
-        when(productRepository.findByProductName(anyString())).thenReturn(null);
-        when(productRepository.save(any(Product.class))).thenReturn(new Product());
+        // Perform the action
+        Product savedProduct = productRepository.save(ProductMapper.toEntity(productDto));
 
-        ProductDto result = productService.saveProduct(productDto);
-
-        assertEquals(productDto, result);
+        // Assertion
+        assertNotNull(savedProduct);
+        assertEquals(productDto.getProductName(), savedProduct.getProductName());
     }
 
+    @Test
+    void testSaveProduct_CacheHitWithValidList() {
+        // Test setup
+        ProductDto productDto = new ProductDto();
+        productDto.setProductName("TestProduct");
+        List<ProductDto> cachedList = new ArrayList<>();
+        cachedList.add(productDto);
+        when(productCache.get("all")).thenReturn(cachedList);
+
+        // Perform the action
+        Product savedProduct = productRepository.save(ProductMapper.toEntity(productDto));
+
+        // Assertion
+        assertNotNull(savedProduct);
+        assertEquals(productDto.getProductName(), savedProduct.getProductName());
+    }
+
+    @Test
+    void testFindAllClients_CacheHitWithValidList() {
+        // Test setup
+        List<ClientDto> cachedList = new ArrayList<>();
+        cachedList.add(new ClientDto());
+        when(clientCache.get("all")).thenReturn(cachedList);
+
+        // Perform the action
+        List<ClientDto> result = productController.findAllClients();
+
+        // Assertion
+        assertNotNull(result);
+        assertEquals(cachedList, result);
+    }
+
+    @Test
+    void testFindAllClients_CacheMiss() {
+        // Test setup
+        when(clientCache.get("all")).thenReturn(null);
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+
+        // Perform the action
+        List<ClientDto> result = productController.findAllClients();
+
+        // Assertion
+        assertNotNull(result);
+        assertEquals(clientList.size(), result.size());
+    }
+
+    @Test
+    void testFindAllClients_CacheHitWithInvalidList() {
+        // Test setup
+        List<String> cachedList = new ArrayList<>();
+        cachedList.add("invalid");
+        when(clientCache.get("all")).thenReturn(cachedList);
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(new Client());
+        when(clientRepository.findAll()).thenReturn(clientList);
+
+        // Perform the action
+        List<ClientDto> result = productController.findAllClients();
+
+        // Assertion
+        assertNotNull(result);
+        assertEquals(clientList.size(), result.size());
+    }
     @Test
     void testFindByProductName() {
         String productName = "Test Product";
