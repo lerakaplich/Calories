@@ -99,16 +99,17 @@ public class DishService {
             @Param("clientName") final String clientName,
             @Param("countOfCalories") final double countOfCalories) {
         String cacheKey = clientName + "_" + countOfCalories;
-        Object cachedObject = dishCache.get(cacheKey);
-        if (cachedObject instanceof List<?> list
-                && !list.isEmpty() && list.get(0) instanceof DishDto) {
-            return (List<DishDto>) list;
-        }
         List<Dish> dishList = dishRepository.
                 findByClientNameAndCountOfCalories(clientName,
                         countOfCalories);
+
         List<DishDto> dishDtoList = dishList.stream()
-                .map(DishMapper::toDto)
+                .map(dish -> {
+                    DishDto dishDto = new DishDto();
+                    dishDto.setDishName(dish.getDishName());
+                    dishDto.setCountOfCalories(dish.getCountOfCalories());
+                    return dishDto;
+                })
                 .toList();
         dishCache.put(cacheKey, dishDtoList);
         return dishDtoList;

@@ -23,8 +23,6 @@ public class GlobalExceptionHandler
                                 final Object body, final HttpHeaders headers,
                                 final HttpStatusCode statusCode,
                                 final WebRequest request) {
-        log.error("Exception thrown in method: {} - Error: {}", ex.getClass().getSimpleName(), ex.getMessage());
-
         HttpErrorMessage errorMessage = new HttpErrorMessage(ex.getMessage());
         return new ResponseEntity<>(errorMessage, statusCode);
     }

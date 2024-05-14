@@ -9,9 +9,11 @@ public final class CounterService {
 
     private CounterService() {
     }
-    private static AtomicInteger requestCount = new AtomicInteger(0);
+    private static AtomicInteger requestCount
+            = new AtomicInteger(0);
 
-    public static synchronized void incrementRequestCount() {
+    public static synchronized
+    void incrementRequestCount() {
         requestCount.incrementAndGet();
     }
 

@@ -15,32 +15,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class Logging {
 
-    @Pointcut("execution(* com.kaplich.calories."
-            + "service.DishService.*(..))")
-    public void dishServiceMethods() {
-    }
+    @Pointcut("within(com.kaplich.calories.service.*)")
+    public void serviceMethods() { }
 
-    @Pointcut("execution(* com.kaplich.calories."
-            + "service.ClientService.*(..))")
-    public void clientServiceMethods() {
-    }
-
-    @Pointcut("execution"
-            + "(* com.kaplich.calories."
-            + "service.ProductService.*(..))")
-    public void productServiceMethods() {
-    }
-
-    @Before("dishServiceMethods() "
-            + "|| clientServiceMethods() || productServiceMethods()")
+    @Before("serviceMethods()")
     public void beforeAdvice(final JoinPoint joinPoint) {
         log.info("Entering method: {}", joinPoint.getSignature().getName());
         logArguments(joinPoint);
     }
 
     @AfterReturning(
-            value = "dishServiceMethods() "
-                    + "|| clientServiceMethods() || productServiceMethods()",
+            value = "serviceMethods()",
             returning = "result")
     public void afterReturningAdvice(
             final JoinPoint joinPoint, final Object result) {
@@ -50,15 +35,13 @@ public class Logging {
         );
     }
 
-    @After(value = "dishServiceMethods() "
-            + "|| clientServiceMethods() || productServiceMethods()")
+    @After("serviceMethods()")
     public void afterAdvice(final JoinPoint joinPoint) {
         log.info("Method: {} has completed",
                 joinPoint.getSignature().getName());
     }
 
-    @AfterThrowing(value = "dishServiceMethods() "
-            + "|| clientServiceMethods() || productServiceMethods()",
+    @AfterThrowing(value = "serviceMethods()",
             throwing = "ex")
     public void afterThrowingAdvice(final JoinPoint joinPoint,
                                     final Throwable ex) {

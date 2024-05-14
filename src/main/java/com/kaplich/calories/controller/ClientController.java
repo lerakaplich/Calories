@@ -3,7 +3,10 @@ package com.kaplich.calories.controller;
 import com.kaplich.calories.dto.ClientDto;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.service.ClientService;
+import com.kaplich.calories.service.CounterService;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,9 +28,14 @@ import java.util.List;
 @RequestMapping("/api/v1/clients")
 public class ClientController {
     private final ClientService service;
+    static final Logger LOGGER = LogManager.getLogger(ClientController.class);
+
     @GetMapping
     public List<ClientDto> findAllClients() {
 
+        CounterService.incrementRequestCount();
+        int requestCount = CounterService.getRequestCount();
+        LOGGER.info("Текущее количество запросов: {}", requestCount);
         return service.findAllClients();
     }
 
@@ -64,7 +72,8 @@ public class ClientController {
         throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @PostMapping("/bulkSave")
-    public void bulkSaveClients(@RequestBody ArrayList<Client> clientList){
+    public void bulkSaveClients(@RequestBody
+                                    final ArrayList<Client> clientList) {
         service.bulkSaveClients(clientList);
     }
 }
