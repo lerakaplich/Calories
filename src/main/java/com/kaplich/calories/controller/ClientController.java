@@ -4,45 +4,64 @@ import com.kaplich.calories.dto.ClientDto;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.service.ClientService;
 import com.kaplich.calories.service.CounterService;
+import io.swagger.annotations.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @AllArgsConstructor
-@RestController
-@RequestMapping("/api/v1/clients")
+@Controller
+@RequestMapping("/clients")
 public class ClientController {
+
     private final ClientService service;
     static final Logger LOGGER = LogManager.getLogger(ClientController.class);
-
+    private static final String CLIENTS_VIEW = "clients";
+    private static final String HOME_VIEW = "home";
+    //@ResponseBody
     @GetMapping
-    public List<ClientDto> findAllClients() {
-
-        CounterService.incrementRequestCount();
-        int requestCount = CounterService.getRequestCount();
-        LOGGER.info("Текущее количество запросов: {}", requestCount);
-        return service.findAllClients();
+    public String findAllClients(Model model) {
+        List<ClientDto> clients = service.findAllClients();
+        model.addAttribute("clients", clients);
+        model.addAttribute("message", model.getAttribute("message")); // Получаем сообщение об успехе
+        return CLIENTS_VIEW;
     }
 
     @PostMapping("/save")
-    public Client saveClient(@RequestBody final Client client) {
+    public String saveClient(@Valid @ModelAttribute("client") final Client client,
+                             final BindingResult bindingResult,
+                             final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            // Если есть ошибки валидации, возвращаемся на ту же страницу с ошибками
+            return "createClient";
+        }
+        service.saveClient(client); // Сохранение клиента
+        redirectAttributes.addFlashAttribute("message", "Клиент успешно сохранен");
+        return "redirect:/clients"; // Перенаправление на страницу списка клиентов
+    }
 
-        return service.saveClient(client);
+
+    @GetMapping("/save")
+    public String createClient(final @ModelAttribute("clients") Client client) {
+
+        return "createClient";
     }
 
     @GetMapping("/findByName")

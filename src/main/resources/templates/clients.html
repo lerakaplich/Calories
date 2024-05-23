@@ -1,10 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <title>Информация о клиентах</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <style>
 
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            background-color: #808080; /* Серый цвет */
+            width: 250px; /* Ширина полосы */
+            height: 100%; /* Высота до верха страницы */
+            padding: 20px; /* Отступы внутри полосы */
+            font-size: 28px;
+        }
+
+        .content {
+            background-color: #b4e3c9; /* Зелёный цвет */
+            flex-grow: 1; /* Расширение на всё доступное пространство */
+            padding: 20px; /* Отступы внутри контента */
+            overflow: auto; /* Добавляем прокрутку, если контент превышает высоту окна */
+            font-size: 18px;
+        }
+
+        .content h2 {
+            font-size: 24px; /* Увеличиваем размер шрифта для заголовков */
+        }
+
+        .sidebar ul li a {
+            display: block; /* Чтобы ссылки занимали всю ширину списка */
+            padding: 10px; /* Отступы вокруг текста ссылки */
+            text-decoration: none; /* Убираем подчеркивание ссылок */
+            color: #000; /* Черный цвет текста ссылки */
+            background-color: transparent; /* Без фона по умолчанию */
+            border-radius: 5px; /* Радиус границы для плавных углов */
+            transition: background-color 0.3s ease; /* Анимация изменения фона */
+            font-size: 26px;
+        }
+
+        /* Эффект подсветки при наведении */
+        .sidebar ul li a:hover {
+            background-color: #bfbcbc; /* Светло-серый цвет фона */
+        }
+        .default-visible {
+            display: block;
+        }
+
+
+        .client-cards,
+        .product-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start; /* Выравнивание по верхнему краю */
+            gap: 20px;
+        }
+        .client-card,
+        .product-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 40px); /* Размер карточки, учитывая отступы */
+            max-width: 300px; /* Максимальный размер карточки */
+        }
+        .client-card h3,
+        .product-card h3 {
+            margin-bottom: 10px; /* Добавляем отступ снизу для разделения заголовка от списка */
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .client-card ul
+        .product-card ul {
+            list-style-type: none; /* Убираем маркеры списка */
+            padding-left: 0; /* Убираем отступ слева */
+        }
+
+        .client-card li
+        .product-card li {
+            margin-top: 5px; /* Отступ сверху для каждого пункта списка */
+            font-size: 14px;
+            color: #666;
+        }
+        .add-button {
+            background-color: green; /* Зелёный цвет */
+            color: white; /* Белый цвет текста */
+            border: none; /* Убираем стандартные границы */
+            cursor: pointer; /* Изменяем курсор на указатель при наведении */
+            padding: 5px 10px; /* Отступы вокруг текста кнопки */
+            margin-top: 10px; /* Отступ сверху от текста карточки */
+            margin-bottom: 20px; /* Добавляем отступ снизу для создания пустой строки */
+            border-radius: 5px; /* Радиус границы для плавных углов */
+            display: inline-block; /* Изменяем поведение элемента */
+        }
+
+        .edit-btn,
+        .details-btn {
+            background-color: #007bff; /* Синий цвет */
+            color: white; /* Белый цвет текста */
+            border: none; /* Убираем стандартные границы */
+            cursor: pointer; /* Изменяем курсор на указатель при наведении */
+            padding: 5px 10px; /* Отступы вокруг текста кнопки */
+            margin-top: 10px; /* Отступ сверху от текста карточки */
+            border-radius: 5px; /* Радиус границы для плавных углов */
+        }
+
+        .edit-btn:hover,
+        .delete-btn:hover,
+        .details-btn:hover {
+            opacity: 0.8; /* Тени при наведении */
+        }
+        .delete-btn {
+            background-color: red; /* Красный цвет фона */
+            color: white; /* Белый цвет текста */
+            border: none; /* Убираем стандартные границы */
+            cursor: pointer; /* Изменяем курсор на указатель при наведении */
+            padding: 5px 10px; /* Отступы вокруг текста кнопки */
+            margin-top: 10px; /* Отступ сверху от текста карточки */
+            border-radius: 5px; /* Радиус границы для плавных углов */
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="sidebar">
+    <!-- Содержимое полосы -->
+    <h2>Меню</h2>
+
+    <ul>
+        <li><a href="/clients">Клиенты</a></li>
+        <li><a href="/dishes">Блюда</a></li>
+        <li><a href="/products">Продукты</a></li>
+    </ul>
+</div>
+<div class="content">
+    <h2>Информация о клиентах</h2>
+    <a class="btn add-button" th:href="@{/clients/save}">Добавить клиента</a>
+    <div class="alert alert-success" role="alert" th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+    <div class="client-cards">
+        <div th:each="client : ${clients}" class="client-card">
+            <h3 th:text="${client.clientName}"></h3>
+            <strong>Имя:</strong> <span th:text="${client.clientName}"></span><br>
+            <strong>Вес:</strong> <span th:text="${client.weight}"></span> кг<br>
+            <strong>Рост:</strong> <span th:text="${client.height}"></span> см<br>
+
+            <button class="details-btn">Подробнее</button>
+            <button class="edit-btn">Изменить</button>
+            <button class="delete-btn">Удалить</button>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    document.addEventListener("DOMContentLoaded", function() {
+        function loadPage(pageUrl) {
+            fetch(pageUrl)
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector('#home').innerHTML = html;
+                })
+                .catch(error => console.error(`Ошибка загрузки страницы: ${error}`));
+        }
+
+        const menuLinks = document.querySelectorAll('.sidebar ul li a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Предотвращаем стандартное действие ссылки
+                loadPage(this.href); // Используем полный URL
+            });
+        });
+    });
+</script>
 </body>
 </html>
+

@@ -4,6 +4,8 @@ import com.kaplich.calories.dto.ProductDto;
 import com.kaplich.calories.model.Product;
 import com.kaplich.calories.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @AllArgsConstructor
-@RestController
-@RequestMapping("/api/v1/products")
+@Controller
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService service;
+    private static final String HOME_VIEW = "home";
+
+    private static final String PRODUCTS_VIEW = "products";
 
     @GetMapping
-    public List<ProductDto> findAllProducts() {
+    public String findAllProducts(Model model) {
+        List<ProductDto> products = service.findAllProducts();
+        model.addAttribute(PRODUCTS_VIEW, products);
+        return PRODUCTS_VIEW;
+    }
 
-        return service.findAllProducts();
+    @GetMapping("/home")
+    public String findClients() {
+        return HOME_VIEW;
     }
 
     @PostMapping("/save")

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Ошибка</title>
+  <style>
+    body {
+      background-color: #90EE90; /* светло-зеленый цвет фона */
+      margin: 0; /* убираем отступы по умолчанию */
+      padding: 0; /* убираем поля по умолчанию */
+    }
+
+    header {
+      background-color: #F5F5F5; /* молочный цвет фона */
+      padding: 20px 0; /* вертикальные отступы 20px, горизонтальные 0 */
+      text-align: center; /* выравнивание текста по центру */
+    }
+
+    h1 {
+      margin: 0; /* убираем отступы заголовка */
+    }
+  </style>
+
+</head>
+<body class="container-md">
+<div class="container">
+  <h1>Ошибка</h1>
+  <p th:text="${errorMessage}"></p>
+  <a class="btn btn-secondary" th:href="@{/clients}">Вернуться на главную</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  document.addEventListener("DOMContentLoaded", function() {
+    function loadPage(pageUrl) {
+      fetch(pageUrl)
+              .then(response => response.text())
+              .then(html => {
+                document.querySelector('#home').innerHTML = html;
+              })
+              .catch(error => console.error(`Ошибка загрузки страницы: ${error}`));
+    }
+
+    const menuLinks = document.querySelectorAll('.sidebar ul li a');
+    menuLinks.forEach(link => {
+      link.addEventListener('click', function(event) {
+        event.preventDefault(); // Предотвращаем стандартное действие ссылки
+        loadPage(this.href); // Используем полный URL
+      });
+    });
+  });
+</script>
+</body>
+</html>

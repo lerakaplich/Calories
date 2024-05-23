@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    background-color: #808080; /* Серый цвет */
+    width: 250px; /* Ширина полосы */
+    height: 100%; /* Высота до верха страницы */
+    padding: 20px; /* Отступы внутри полосы */
+    font-size: 28px;
+}
+
+.content {
+    background-color: #b4e3c9; /* Зелёный цвет */
+    flex-grow: 1; /* Расширение на всё доступное пространство */
+    padding: 20px; /* Отступы внутри контента */
+    overflow: auto; /* Добавляем прокрутку, если контент превышает высоту окна */
+    font-size: 18px;
+}
+
+.content h2 {
+    font-size: 24px; /* Увеличиваем размер шрифта для заголовков */
+}
+
+.sidebar ul li a {
+    display: block; /* Чтобы ссылки занимали всю ширину списка */
+    padding: 10px; /* Отступы вокруг текста ссылки */
+    text-decoration: none; /* Убираем подчеркивание ссылок */
+    color: #000; /* Черный цвет текста ссылки */
+    background-color: transparent; /* Без фона по умолчанию */
+    border-radius: 5px; /* Радиус границы для плавных углов */
+    transition: background-color 0.3s ease; /* Анимация изменения фона */
+    font-size: 26px;
+}
+
+/* Эффект подсветки при наведении */
+.sidebar ul li a:hover {
+    background-color: #bfbcbc; /* Светло-серый цвет фона */
+}
+.default-visible {
+    display: block;
+}
+.client-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+    gap: 20px;
+}
+
+
+.client-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: calc(33% - 40px); /* Размер карточки, учитывая отступы */
+    max-width: 300px; /* Максимальный размер карточки */
+
+}
+
+.client-card h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.client-card p {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #666;
+}
+.product-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+    gap: 20px;
+}
+
+.product-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: calc(33% - 40px); /* Размер карточки, учитывая отступы */
+    max-width: 300px; /* Максимальный размер карточки */
+}
+
+.product-card h3 {
+    margin-bottom: 10px; /* Добавляем отступ снизу для разделения заголовка от списка */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-card ul {
+    list-style-type: none; /* Убираем маркеры списка */
+    padding-left: 0; /* Убираем отступ слева */
+}
+
+.product-card li {
+    margin-top: 5px; /* Отступ сверху для каждого пункта списка */
+    font-size: 14px;
+    color: #666;
+}
+
+.edit-btn,
+.details-btn {
+    background-color: #007bff; /* Синий цвет */
+    color: white; /* Белый цвет текста */
+    border: none; /* Убираем стандартные границы */
+    cursor: pointer; /* Изменяем курсор на указатель при наведении */
+    padding: 5px 10px; /* Отступы вокруг текста кнопки */
+    margin-top: 10px; /* Отступ сверху от текста карточки */
+    border-radius: 5px; /* Радиус границы для плавных углов */
+}
+
+.edit-btn:hover,
+.delete-btn:hover,
+.details-btn:hover {
+    opacity: 0.8; /* Тени при наведении */
+}
+.delete-btn {
+    background-color: red; /* Красный цвет фона */
+    color: white; /* Белый цвет текста */
+    border: none; /* Убираем стандартные границы */
+    cursor: pointer; /* Изменяем курсор на указатель при наведении */
+    padding: 5px 10px; /* Отступы вокруг текста кнопки */
+    margin-top: 10px; /* Отступ сверху от текста карточки */
+    border-radius: 5px; /* Радиус границы для плавных углов */
+}

@@ -5,26 +5,37 @@ import com.kaplich.calories.model.Dish;
 import com.kaplich.calories.service.DishService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @AllArgsConstructor
-@RestController
-@RequestMapping("/api/v1/dishes")
+@Controller
+@RequestMapping("/dishes")
 public class DishController {
     private final DishService service;
+    private static final String HOME_VIEW = "home";
+
+    private static final String DISHES_VIEW = "dishes";
 
     @GetMapping
-    public List<DishDto> findAllDishes() {
-        return service.findAllDishes();
+    public String findAllDishes(Model model) {
+        List<DishDto> dishes = service.findAllDishes();
+        model.addAttribute("dishes", dishes);
+        return DISHES_VIEW;
+
+    }
+
+    @GetMapping("/home")
+    public String findClients() {
+        return HOME_VIEW;
+    }
+
+    @GetMapping("/save")
+    public String createDay(final @ModelAttribute("dishes") DishDto dishDto) {
+        return "createDish";
     }
 
     @PostMapping("/save")
