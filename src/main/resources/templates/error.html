@@ -5,28 +5,223 @@
   <title>Ошибка</title>
   <style>
     body {
-      background-color: #90EE90; /* светло-зеленый цвет фона */
+      background-color: #b4e3c9; /* светло-зеленый цвет фона */
       margin: 0; /* убираем отступы по умолчанию */
       padding: 0; /* убираем поля по умолчанию */
+      display: flex; /* Используем flexbox для центрирования содержимого */
+      justify-content: left; /* Центрирование по горизонтали */
+      /*align-items: center; /* Центрирование по вертикали */
+      min-height: 100vh; /* Минимальная высота равна высоте окна браузера */
+      height: 100vh;
     }
 
-    header {
+    .sidebar {
+      background-color: #808080; /* Серый цвет */
+      width: 250px; /* Ширина полосы */
+      height: 100%; /* Высота до верха страницы */
+      padding: 20px; /* Отступы внутри полосы */
+      font-size: 28px;
+    }
+    .sidebar ul li a {
+      display: block; /* Чтобы ссылки занимали всю ширину списка */
+      padding: 10px; /* Отступы вокруг текста ссылки */
+      text-decoration: none; /* Убираем подчеркивание ссылок */
+      color: #000; /* Черный цвет текста ссылки */
+      background-color: transparent; /* Без фона по умолчанию */
+      border-radius: 5px; /* Радиус границы для плавных углов */
+      transition: background-color 0.3s ease; /* Анимация изменения фона */
+      font-size: 26px;
+    }
+
+    /* Эффект подсветки при наведении */
+    .sidebar ul li a:hover {
+      background-color: #bfbcbc; /* Светло-серый цвет фона */
+    }
+    .add-button {
+      background-color: green; /* Зелёный цвет */
+      color: white; /* Белый цвет текста */
+      border: none; /* Убираем стандартные границы */
+      cursor: pointer; /* Изменяем курсор на указатель при наведении */
+      padding: 5px 10px; /* Отступы вокруг текста кнопки */
+      margin-top: 10px; /* Отступ сверху от текста карточки */
+      margin-bottom: 20px; /* Добавляем отступ снизу для создания пустой строки */
+      border-radius: 5px; /* Радиус границы для плавных углов */
+      display: inline-block; /* Изменяем поведение элемента */
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background-color: #52b886;
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+      padding: 20px;
+    }
+
+    .content h2 {
+      font-size: 24px; /* Увеличиваем размер шрифта для заголовков */
+    }
+
+    .btn {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+      transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    .form-label {
+      color: #fff;
+    }
+
+    .form-control {
+      background-color: #fff;
+      border-color: #ddd;
+      color: #000;
+    }
+
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .mb-3 {
+      margin-bottom: 20px;
+    }
+
+    .error {
+      color: red;
+    }
+    .sidebar {
+      background-color: #808080; /* Серый цвет */
+      width: 250px; /* Ширина полосы */
+      height: 100%; /* Высота до верха страницы */
+      padding: 20px; /* Отступы внутри полосы */
+      font-size: 28px;
+    }
+
+
+    .content h2 {
+      font-size: 24px; /* Увеличиваем размер шрифта для заголовков */
+    }
+
+    .sidebar ul li a {
+      display: block; /* Чтобы ссылки занимали всю ширину списка */
+      padding: 10px; /* Отступы вокруг текста ссылки */
+      text-decoration: none; /* Убираем подчеркивание ссылок */
+      color: #000; /* Черный цвет текста ссылки */
+      background-color: transparent; /* Без фона по умолчанию */
+      border-radius: 5px; /* Радиус границы для плавных углов */
+      transition: background-color 0.3s ease; /* Анимация изменения фона */
+      font-size: 26px;
+    }
+
+    /* Эффект подсветки при наведении */
+    .sidebar ul li a:hover {
+      background-color: #bfbcbc; /* Светло-серый цвет фона */
+    }
+
+
+    .client-card h3,
+    .product-card h3 {
+      margin-bottom: 10px; /* Добавляем отступ снизу для разделения заголовка от списка */
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .client-card ul
+    .product-card ul {
+      list-style-type: none; /* Убираем маркеры списка */
+      padding-left: 0; /* Убираем отступ слева */
+    }
+
+    .client-card li
+    .product-card li {
+      margin-top: 5px; /* Отступ сверху для каждого пункта списка */
+      font-size: 14px;
+      color: #666;
+    }
+
+    .edit-btn,
+    .details-btn {
+      background-color: #007bff; /* Синий цвет */
+      color: white; /* Белый цвет текста */
+      border: none; /* Убираем стандартные границы */
+      cursor: pointer; /* Изменяем курсор на указатель при наведении */
+      padding: 5px 10px; /* Отступы вокруг текста кнопки */
+      margin-top: 10px; /* Отступ сверху от текста карточки */
+      border-radius: 5px; /* Радиус границы для плавных углов */
+    }
+
+    .edit-btn:hover,
+    .delete-btn:hover,
+    .details-btn:hover {
+      opacity: 0.8; /* Тени при наведении */
+    }
+    .delete-btn {
+      background-color: red; /* Красный цвет фона */
+      color: white; /* Белый цвет текста */
+      border: none; /* Убираем стандартные границы */
+      cursor: pointer; /* Изменяем курсор на указатель при наведении */
+      padding: 5px 10px; /* Отступы вокруг текста кнопки */
+      margin-top: 10px; /* Отступ сверху от текста карточки */
+      border-radius: 5px; /* Радиус границы для плавных углов */
+    }
+
+    .error-container {
       background-color: #F5F5F5; /* молочный цвет фона */
-      padding: 20px 0; /* вертикальные отступы 20px, горизонтальные 0 */
-      text-align: center; /* выравнивание текста по центру */
+      height: 20%;
+      margin: 30px;
+      padding: 30px; /* увеличенные вертикальные и горизонтальные отступы */
+      text-align: left; /* выравнивание текста по центру */
+      border-radius: 5px; /* радиус границы для плавных углов */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* тень для эффекта выпуклости */
+      width: 80%; /* ширина контейнера */
+      max-width: 600px; /* максимальная ширина контейнера */
     }
 
     h1 {
       margin: 0; /* убираем отступы заголовка */
     }
-  </style>
 
+    .btn-secondary {
+      text-decoration: none; /* Убираем подчеркивание */
+      color: #5fa34b; /* Цвет текста */
+    }
+    .add-button {
+      background-color: green; /* Зелёный цвет */
+      color: white; /* Белый цвет текста */
+      border: none; /* Убираем стандартные границы */
+      cursor: pointer; /* Изменяем курсор на указатель при наведении */
+      padding: 5px 10px; /* Отступы вокруг текста кнопки */
+      margin-top: 10px; /* Отступ сверху от текста карточки */
+      margin-bottom: 20px; /* Добавляем отступ снизу для создания пустой строки */
+      border-radius: 5px; /* Радиус границы для плавных углов */
+      display: inline-block; /* Изменяем поведение элемента */
+    }
+  </style>
 </head>
-<body class="container-md">
-<div class="container">
+<body>
+<div class="sidebar">
+  <!-- Содержимое полосы -->
+  <h2>Меню</h2>
+
+  <ul>
+    <li><a href="/clients">Клиенты</a></li>
+    <li><a href="/dishes">Блюда</a></li>
+    <li><a href="/products">Продукты</a></li>
+  </ul>
+</div>
+<div class="error-container">
   <h1>Ошибка</h1>
   <p th:text="${errorMessage}"></p>
-  <a class="btn btn-secondary" th:href="@{/clients}">Вернуться на главную</a>
+  <a class="btn btn-secondary" th:href="@{/clients}">
+    <div class="add-button">Вернуться на главную</div>
+    </a>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">

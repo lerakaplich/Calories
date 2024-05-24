@@ -82,6 +82,7 @@ public class ClientController {
 
         service.deleteClient(nameOfClient);
     }
+
     @GetMapping("/400_error")
     public void hardcodedBadRequest() {
         throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);

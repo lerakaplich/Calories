@@ -126,7 +126,10 @@
             margin-top: 10px; /* Отступ сверху от текста карточки */
             border-radius: 5px; /* Радиус границы для плавных углов */
         }
-
+        .btn-secondary {
+            text-decoration: none; /* Убираем подчеркивание */
+            color: #5fa34b; /* Цвет текста */
+        }
     </style>
 </head>
 
@@ -143,10 +146,15 @@
 </div>
 <div class="content">
     <h2>Информация о клиентах</h2>
-    <a class="btn add-button" th:href="@{/clients/save}">Добавить клиента</a>
+    <a class="btn btn-secondary" th:href="@{/clients/save}">
+        <div class="btn add-button"> Добавить клиента</div></a>
+
+
     <div class="alert alert-success" role="alert" th:if="${message}">
         <span th:text="${message}"></span>
     </div>
+
+
     <div class="client-cards">
         <div th:each="client : ${clients}" class="client-card">
             <h3 th:text="${client.clientName}"></h3>

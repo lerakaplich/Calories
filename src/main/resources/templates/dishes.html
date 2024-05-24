@@ -20,6 +20,10 @@
             padding: 20px; /* Отступы внутри полосы */
             font-size: 28px;
         }
+        .btn-secondary {
+            text-decoration: none; /* Убираем подчеркивание */
+            color: #007bff; /* Цвет текста */
+        }
 
         .content {
             background-color: #b4e3c9; /* Зелёный цвет */
@@ -146,7 +150,12 @@
 </div>
 <div class="content">
     <h2>Информация о блюдах</h2>
+    <a class="btn btn-secondary" th:href="@{/dishes/save}">
+        <div class="btn add-button"> Добавить блюдо</div></a>
 
+    <div class="alert alert-success" role="alert" th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
     <div class="dish-cards">
         <div th:each="dish : ${dishes}" class="dish-card">
             <h3 th:text="${dish.dishName}"></h3>

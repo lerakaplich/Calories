@@ -129,6 +129,10 @@
             margin-top: 10px; /* Отступ сверху от текста карточки */
             border-radius: 5px; /* Радиус границы для плавных углов */
         }
+        .btn-secondary {
+            text-decoration: none; /* Убираем подчеркивание */
+            color: #5fa34b; /* Цвет текста */
+        }
 
     </style>
 </head>
@@ -146,7 +150,10 @@
 </div>
 <div class="content">
     <h2>Информация о продуктах</h2>
-    <a class="btn add-button" th:href="@{/products/save}">Добавить продукт</a><br> <!-- Здесь добавлен тег <br> -->
+    <a class="btn btn-secondary" th:href="@{/products/save}">
+        <div class="add-button">Добавить продукт</div>
+    </a>
+
 
     <div class="product-cards">
         <div th:each="product : ${products}" class="product-card">
