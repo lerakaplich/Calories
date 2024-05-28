@@ -162,6 +162,11 @@
             <strong>Белки:</strong> <span th:text="${product.protein}"></span> г<br>
             <strong>Жиры:</strong> <span th:text="${product.fat}"></span> г<br>
             <strong>Углеводы:</strong> <span th:text="${product.carbohydrate}"></span> г<br>
+            <div class="d-flex justify-content-between gap-2">
+                <a class="edit-btn">Изменить</a>
+                <a class="delete-btn" th:href="@{/products/{nameOfProduct}(nameOfProduct=${product.productName})}">Удалить</a>
+            </div>
+            <button class="details-btn">Подробнее</button>
 
             <!-- Дополнительные действия, например, редактирование или удаление продукта -->
         </div>
@@ -185,6 +190,23 @@
             link.addEventListener('click', function(event) {
                 event.preventDefault(); // Предотвращаем стандартное действие ссылки
                 loadPage(this.href); // Используем полный URL
+            });
+        });
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const productName = this.closest('.product-card').querySelector('h3').textContent.trim();
+                fetch(`/products/${productName}`, { method: 'DELETE' }) // Изменил метод на DELETE и убрал тело запроса
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Перезагрузка страницы после успешного удаления
+                        } else {
+                            alert('Ошибка при удалении клиента');
+                        }
+                    })
+                    .catch(error => console.error(`Ошибка удаления клиента: ${error}`));
             });
         });
     });

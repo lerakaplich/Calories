@@ -133,18 +133,17 @@
 </div>
 <div class="error-container">
     <p class="message">Вы уверены, что хотите удалить блюдо <span th:text="${dish.dishName}"></span>?</p>
-    <div class="buttons-container">
-        <a class="btn-secondary return-link" th:href="@{/dishes}">
-            <div class="add-button">Вернуться на главную</div>
-        </a>
-        <a>
-            <div class="delete-btn">Удалить</div>
-        </a>
-    </div>
+
+    <form th:action="@{/dishes/{nameOfDish}(nameOfDish=${dish.dishName})}"
+          th:object="${dishes}" method="post">
+        <input type="hidden" name="_method" value="DELETE" />
+        <button type="submit">Удалить</button>
+    </form>
+    <a class="btn-secondary return-link" th:href="@{/dishes}">
+        <div class="add-button">Вернуться на главную</div>
+    </a>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-QWTKzjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     document.addEventListener("DOMContentLoaded", function() {
@@ -164,6 +163,7 @@
                 loadPage(this.href); // Используем полный URL
             });
         });
+
     });
 </script>
 </body>

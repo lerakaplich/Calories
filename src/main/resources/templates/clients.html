@@ -162,9 +162,11 @@
             <strong>Вес:</strong> <span th:text="${client.weight}"></span> кг<br>
             <strong>Рост:</strong> <span th:text="${client.height}"></span> см<br>
 
+            <div class="d-flex justify-content-between gap-2">
+                <a class="edit-btn">Изменить</a>
+                <a class="delete-btn" th:href="@{/clients/delete/{nameOfClient}(nameOfClient=${client.clientName})}">Удалить</a>
+            </div>
             <button class="details-btn">Подробнее</button>
-            <button class="edit-btn">Изменить</button>
-            <button class="delete-btn" >Удалить</button>
 
 
         </div>
@@ -188,6 +190,24 @@
             link.addEventListener('click', function(event) {
                 event.preventDefault(); // Предотвращаем стандартное действие ссылки
                 loadPage(this.href); // Используем полный URL
+            });
+        });
+
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const clientName = this.closest('.client-card').querySelector('h3').textContent.trim();
+                fetch(`/clients/${clientName}`, { method: 'DELETE' }) // Изменил метод на DELETE и убрал тело запроса
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Перезагрузка страницы после успешного удаления
+                        } else {
+                            alert('Ошибка при удалении клиента');
+                        }
+                    })
+                    .catch(error => console.error(`Ошибка удаления клиента: ${error}`));
             });
         });
     });

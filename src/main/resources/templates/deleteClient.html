@@ -133,15 +133,21 @@
 </div>
 <div class="error-container">
     <p class="message">Вы уверены, что хотите удалить клиента <span th:text="${client.clientName}"></span>?</p>
-    <div class="buttons-container">
-        <a class="btn-secondary return-link" th:href="@{/clients}">
-            <div class="add-button">Вернуться на главную</div>
-        </a>
-        <a>
-            <div class="delete-btn">Удалить</div>
-            </a>
-    </div>
+
+    <form th:action="@{/clients/{nameOfClient}(nameOfClient=${client.clientName})}"
+          th:object="${clients}" method="post">
+        <input type="hidden" name="_method" value="DELETE" />
+        <button type="submit">Удалить</button>
+    </form>
+    <a class="btn-secondary return-link" th:href="@{/clients}">
+        <div class="add-button">Вернуться на главную</div>
+    </a>
 </div>
+
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-QWTKzjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </script>

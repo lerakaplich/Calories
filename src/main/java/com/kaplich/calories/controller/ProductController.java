@@ -62,9 +62,22 @@ public class ProductController {
         return service.updateProduct(productName, newProductName);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteProduct(@RequestParam final String nameOfProduct) {
-
+    @PostMapping(value = "/{nameOfProduct}", params = "_method=DELETE")
+    public String deleteClient(@PathVariable final String nameOfProduct, final Model model) {
         service.deleteProduct(nameOfProduct);
+        return "redirect:/products";
+    }
+
+
+    @GetMapping("/delete/{nameOfProduct}")
+    public String showDeleteForm(@PathVariable String nameOfProduct, Model model) {
+        final ProductDto productDto = service.findByProductName(nameOfProduct);
+        if (productDto!= null) {
+            model.addAttribute("product", productDto);
+            return "deleteProduct";
+        } else {
+            // Обработайте случай, когда клиент не найден
+            return "error"; // Замените на вашу страницу ошибки
+        }
     }
 }

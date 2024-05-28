@@ -62,10 +62,23 @@ public class DishController {
         return service.updateDish(dishName, newDishName);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteDish(@RequestParam final String nameOfDish) {
-
+    @PostMapping(value = "/{nameOfDish}", params = "_method=DELETE")
+    public String deleteClient(@PathVariable final String nameOfDish, final Model model) {
         service.deleteDish(nameOfDish);
+        return "redirect:/dishes";
+    }
+
+
+    @GetMapping("/delete/{nameOfDish}")
+    public String showDeleteForm(@PathVariable String nameOfDish, Model model) {
+        final DishDto dishDto = service.findByDishName(nameOfDish);
+        if (dishDto!= null) {
+            model.addAttribute("dish", dishDto);
+            return "deleteDish";
+        } else {
+            // Обработайте случай, когда клиент не найден
+            return "error"; // Замените на вашу страницу ошибки
+        }
     }
 
     @GetMapping("/findByNameAndCountOfCalories")

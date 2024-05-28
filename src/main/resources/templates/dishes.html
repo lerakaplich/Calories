@@ -165,7 +165,11 @@
                     <strong>Продукт:</strong> <span th:text="${product.productName}"></span><br>
                 </li>
             </ul>
-
+            <div class="d-flex justify-content-between gap-2">
+                <a class="edit-btn">Изменить</a>
+                <a class="delete-btn" th:href="@{/dishes/{nameOfDish}(nameOfDish=${dish.dishName})}">Удалить</a>
+            </div>
+            <button class="details-btn">Подробнее</button>
             <!-- Дополнительные действия, например, редактирование или удаление блюда -->
         </div>
     </div>
@@ -188,6 +192,23 @@
             link.addEventListener('click', function(event) {
                 event.preventDefault(); // Предотвращаем стандартное действие ссылки
                 loadPage(this.href); // Используем полный URL
+            });
+        });
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const dishName = this.closest('.dish-card').querySelector('h3').textContent.trim();
+                fetch(`/dishes/${dishName}`, { method: 'DELETE' }) // Изменил метод на DELETE и убрал тело запроса
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Перезагрузка страницы после успешного удаления
+                        } else {
+                            alert('Ошибка при удалении клиента');
+                        }
+                    })
+                    .catch(error => console.error(`Ошибка удаления клиента: ${error}`));
             });
         });
     });
