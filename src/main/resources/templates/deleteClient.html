@@ -22,18 +22,19 @@
         }
 
         .sidebar ul li a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #000;
-            background-color: transparent;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+            display: block; /* Чтобы ссылки занимали всю ширину списка */
+            padding: 10px; /* Отступы вокруг текста ссылки */
+            text-decoration: none; /* Убираем подчеркивание ссылок */
+            color: #000; /* Черный цвет текста ссылки */
+            background-color: transparent; /* Без фона по умолчанию */
+            border-radius: 5px; /* Радиус границы для плавных углов */
+            transition: background-color 0.3s ease; /* Анимация изменения фона */
             font-size: 26px;
         }
 
+        /* Эффект подсветки при наведении */
         .sidebar ul li a:hover {
-            background-color: #bfbcbc;
+            background-color: #bfbcbc; /* Светло-серый цвет фона */
         }
 
         .add-button {
@@ -128,7 +129,6 @@
     <ul>
         <li><a href="/clients">Клиенты</a></li>
         <li><a href="/dishes">Блюда</a></li>
-        <li><a href="/products">Продукты</a></li>
     </ul>
 </div>
 <div class="error-container">

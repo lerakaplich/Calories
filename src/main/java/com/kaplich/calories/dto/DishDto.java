@@ -18,6 +18,8 @@ import java.util.List;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DishDto {
+    @JsonIgnore
+    private Long id;
     @JsonProperty("dish_name")
     private String dishName;
     @JsonProperty("count_of_calories")

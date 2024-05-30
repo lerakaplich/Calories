@@ -41,7 +41,7 @@ public class Dish {
     private String dishName;
     @Column
     private double countOfCalories;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinColumn(name = "client_id")
     private Client client;

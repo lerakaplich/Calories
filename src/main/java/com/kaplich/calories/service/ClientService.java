@@ -62,16 +62,30 @@ public class ClientService {
         return ClientMapper.toDto(client);
     }
 
-    public Client updateClient(final String clientName,
-                               final String newClientName) {
-        Client newClient = clientRepository.findByClientName(clientName);
-        if (newClient == null) {
-            return null;
+//    public Client updateClient(final String clientName,
+//                               final String newClientName) {
+//        Client newClient = clientRepository.findByClientName(clientName);
+//        if (newClient == null) {
+//            return null;
+//        }
+//        newClient.setClientName(newClientName);
+//        clientCache.remove(clientName);
+//        clientCache.put(newClientName, ClientMapper.toDto(newClient));
+//        return newClient;
+//    }
+
+
+    public void updateClient(final String nameOfClient, final ClientDto updatedClient) {
+        Client clientToUpdate = clientRepository.findByClientName(nameOfClient);
+
+        if(updatedClient.getHeight()!=0) {
+            clientToUpdate.setHeight(updatedClient.getHeight());
         }
-        newClient.setClientName(newClientName);
-        clientCache.remove(clientName);
-        clientCache.put(newClientName, ClientMapper.toDto(newClient));
-        return newClient;
+        if(updatedClient.getWeight()!=0) {
+            clientToUpdate.setWeight(updatedClient.getWeight());
+        }
+
+        clientRepository.save(clientToUpdate);
     }
 
     public void deleteClient(final String nameOfClient) {

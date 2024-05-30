@@ -5,6 +5,7 @@ import com.kaplich.calories.dto.DishDto;
 import com.kaplich.calories.model.Client;
 import com.kaplich.calories.model.Dish;
 import com.kaplich.calories.service.DishService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +33,7 @@ public class DishController {
     }
 
     @PostMapping("/save")
-    public String saveDish(@Valid @ModelAttribute("dishDto") final DishDto dishDto,
+    public String saveDish(@Valid @ModelAttribute("dish") final DishDto dishDto,
                              final BindingResult bindingResult,
                              final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -45,11 +46,11 @@ public class DishController {
     }
 
     @GetMapping("/save")
-    public String createDish(final @ModelAttribute("dishes") DishDto dishDto) {
+    public String createDish(final @ModelAttribute("dish") DishDto dishDto, final Model model) {
+        List<ClientDto> clients = service.findAllClients(); // Метод для получения списка клиентов
+        model.addAttribute("clients", clients);
         return "createDish";
     }
-
-
 
     @GetMapping("/findByName")
     public DishDto findByDishName(@RequestParam final String nameOfDish) {
@@ -57,10 +58,44 @@ public class DishController {
         return service.findByDishName(nameOfDish);
     }
 
-    @PutMapping("/update")
-    public Dish updateDish(final String dishName, final String newDishName) {
-        return service.updateDish(dishName, newDishName);
+    @Operation(method = "POST")
+    @PostMapping(value = "/{id}", params = "_method=PATCH")
+    public String updateDish(final @PathVariable Long id,
+                                final @Valid
+                                @ModelAttribute("dish")
+                                DishDto dishDto,
+                                final BindingResult bindingResult,
+                                final RedirectAttributes redirectAttributes) {
+        service.updateDish(id, dishDto);
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().
+                    forEach(error -> redirectAttributes.
+                            addFlashAttribute("errorMessage",
+                                    error.getDefaultMessage()));
+            return "redirect:/dishes/update/" + id;
+        }
+        redirectAttributes.addFlashAttribute(
+                "successMessage", "Dish updated successfully");
+        return "redirect:/dishes";
     }
+
+
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(final @PathVariable Long id,
+                                 final Model model) {
+        DishDto dishDto = service.findById(id);
+        List<ClientDto> client = service.findAllClients();
+        if (dishDto == null) {
+            model.addAttribute("errorMessage",
+                    "Блюдо" + id + " не найдено");
+            return "redirect:/error";
+        }
+        model.addAttribute("clients", client);
+        model.addAttribute("dish", dishDto);
+        return "updateDish";
+    }
+
 
     @PostMapping(value = "/{nameOfDish}", params = "_method=DELETE")
     public String deleteClient(@PathVariable final String nameOfDish, final Model model) {

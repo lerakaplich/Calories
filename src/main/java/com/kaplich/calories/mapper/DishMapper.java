@@ -28,6 +28,7 @@ public final class DishMapper {
         if (dish.getProductList() != null) {
             if (dish.getClient() != null) {
                 return DishDto.builder()
+                        .id(dish.getId())
                         .dishName(dish.getDishName())
                         .productList(productDtoList)
                         .countOfCalories(dish.getCountOfCalories())
@@ -35,6 +36,7 @@ public final class DishMapper {
                         .build();
             } else {
                 return DishDto.builder()
+                        .id(dish.getId())
                         .dishName(dish.getDishName())
                         .productList(productDtoList)
                         .countOfCalories(dish.getCountOfCalories())
@@ -43,12 +45,14 @@ public final class DishMapper {
         } else {
             if (dish.getClient() != null) {
                 return DishDto.builder()
+                        .id(dish.getId())
                         .dishName(dish.getDishName())
                         .countOfCalories(dish.getCountOfCalories())
                         .clientDto(ClientMapper.toDto(dish.getClient()))
                         .build();
             } else {
                 return DishDto.builder()
+                        .id(dish.getId())
                         .dishName(dish.getDishName())
                         .countOfCalories(dish.getCountOfCalories())
                         .build();
@@ -63,6 +67,7 @@ public final class DishMapper {
         }
         List<Product> productList = new ArrayList<>();
         Dish dish = new Dish();
+        dish.setId(dishDto.getId());
         dish.setDishName(dishDto.getDishName());
         dish.setCountOfCalories(dishDto.getCountOfCalories());
         if (dishDto.getProductList() != null) {

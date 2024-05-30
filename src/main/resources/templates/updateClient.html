@@ -65,10 +65,6 @@
             padding: 20px;
         }
 
-        .content h2 {
-            font-size: 24px; /* Увеличиваем размер шрифта для заголовков */
-        }
-
         .btn {
             background-color: #808080;
             border-color: #808080;
@@ -103,19 +99,6 @@
         .error {
             color: red;
         }
-        .sidebar {
-            background-color: #808080; /* Серый цвет */
-            width: 250px; /* Ширина полосы */
-            height: 100%; /* Высота до верха страницы */
-            padding: 20px; /* Отступы внутри полосы */
-            font-size: 28px;
-        }
-
-
-        .content h2 {
-            font-size: 24px; /* Увеличиваем размер шрифта для заголовков */
-        }
-
         .sidebar ul li a {
             display: block; /* Чтобы ссылки занимали всю ширину списка */
             padding: 10px; /* Отступы вокруг текста ссылки */
@@ -140,13 +123,13 @@
             font-weight: bold;
         }
 
-        .client-card ul
+        .client-card ul,
         .product-card ul {
             list-style-type: none; /* Убираем маркеры списка */
             padding-left: 0; /* Убираем отступ слева */
         }
 
-        .client-card li
+        .client-card li,
         .product-card li {
             margin-top: 5px; /* Отступ сверху для каждого пункта списка */
             font-size: 14px;
@@ -187,19 +170,15 @@
     <ul>
         <li><a href="/clients">Клиенты</a></li>
         <li><a href="/dishes">Блюда</a></li>
-        <li><a href="/products">Продукты</a></li>
     </ul>
 </div>
 <div class="container">
     <h1>Обновление Клиента</h1>
+    <form th:method="POST"
+          th:action="@{/clients/{nameOfClient}(nameOfClient=${client.getClientName()})}"
+          th:object="${client}">
 
-    <form th:action="@{/update}" th:object="${client}" method="post">
-        <input type="hidden" name="_method" value="PUT">
-        <div class="mb-3">
-            <label for="clientName" class="form-label">Имя Клиента:</label>
-            <input type="text" th:field="*{clientName}" class="form-control" id="clientName">
-            <div class="error" th:if="${#fields.hasErrors('clientName')}" th:errors="*{clientName}">clientName</div>
-        </div>
+        <input type="hidden" name="_method" value="PATCH">
         <div class="mb-3">
             <label for="weight" class="form-label">Вес:</label>
             <input type="number" th:field="*{weight}" class="form-control" id="weight">
@@ -211,31 +190,17 @@
             <div class="error" th:if="${#fields.hasErrors('height')}" th:errors="*{height}">height</div>
         </div>
         <!-- Добавьте другие поля здесь -->
+        <div class="d-flex justify-content-between align-items-center">
+            <input class="btn btn-success" type="submit" value="Сохранить" />
+            <a class="btn btn-secondary" th:href="@{/clients}">Вернуться на главную</a>
+        </div>
 
-        <button type="submit" class="btn btn-primary">Обновить</button>
+
     </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    document.addEventListener("DOMContentLoaded", function() {
-        function loadPage(pageUrl) {
-            fetch(pageUrl)
-                .then(response => response.text())
-                .then(html => {
-                    document.querySelector('#home').innerHTML = html;
-                })
-                .catch(error => console.error(`Ошибка загрузки страницы: ${error}`));
-        }
-
-        const menuLinks = document.querySelectorAll('.sidebar ul li a');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault(); // Предотвращаем стандартное действие ссылки
-                loadPage(this.href); // Используем полный URL
-            });
-        });
-    });
 </script>
 </body>
 </html>

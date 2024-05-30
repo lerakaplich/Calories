@@ -1,12 +1,16 @@
 package com.kaplich.calories.service;
 
 import com.kaplich.calories.cache.CacheEntity;
+import com.kaplich.calories.dto.ClientDto;
 import com.kaplich.calories.dto.DishDto;
 import com.kaplich.calories.dto.ProductDto;
+import com.kaplich.calories.mapper.ClientMapper;
 import com.kaplich.calories.mapper.DishMapper;
 import com.kaplich.calories.mapper.ProductMapper;
+import com.kaplich.calories.model.Client;
 import com.kaplich.calories.model.Dish;
 import com.kaplich.calories.model.Product;
+import com.kaplich.calories.repository.ClientRepository;
 import com.kaplich.calories.repository.DishRepository;
 import com.kaplich.calories.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +26,7 @@ import java.util.List;
 public class DishService {
     private final ProductRepository productRepository;
     private final DishRepository dishRepository;
+    private final ClientRepository clientRepository;
     private CacheEntity dishCache;
     private CacheEntity clientCache;
     public List<DishDto> findAllDishes() {
@@ -77,14 +82,22 @@ public class DishService {
 
     }
 
-    public Dish updateDish(final String dishName, final String newDishName) {
-        Dish newDish = dishRepository.findByDishName(dishName);
-        if (newDish == null) {
-            return null;
+    public DishDto findById(final Long id) {
+        Dish dish = dishRepository.findDishById(id);
+        return DishMapper.toDto(dish);
+
+
+    }
+
+    public void updateDish(final Long id, final DishDto updatedDish) {
+        Dish dishToUpdate = dishRepository.findDishById(id);
+        if(updatedDish.getCountOfCalories()!=0){
+        dishToUpdate.setCountOfCalories(updatedDish.getCountOfCalories());
         }
-        newDish.setDishName(newDishName);
-        dishCache.put(newDishName, DishMapper.toDto(newDish));
-        return newDish;
+        if(updatedDish.getClientDto()!=null) {
+            dishToUpdate.setClient(ClientMapper.toEntity(updatedDish.getClientDto()));
+        }
+        dishRepository.save(dishToUpdate);
     }
 
     public void deleteDish(final String nameOfDish) {
@@ -114,5 +127,12 @@ public class DishService {
         dishCache.put(cacheKey, dishDtoList);
         return dishDtoList;
     }
-
+    public List<ClientDto> findAllClients() {
+        List<ClientDto> clientDtoList = new ArrayList<>();
+        for (Client client : clientRepository.findAll()) {
+            ClientDto clientDto = ClientMapper.toDto(client);
+            clientDtoList.add(clientDto);
+        }
+        return clientDtoList;
+    }
 }

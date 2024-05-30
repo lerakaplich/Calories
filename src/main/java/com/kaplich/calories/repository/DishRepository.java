@@ -12,6 +12,8 @@ import java.util.List;
 public interface DishRepository extends JpaRepository<Dish, Long> {
     Dish findByDishName(String nameOfDish);
 
+    Dish findDishById(Long id);
+
     @Override
     void delete(Dish entity);
 

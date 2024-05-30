@@ -65,12 +65,50 @@ public class ClientController {
         return service.findByClientName(nameOfClient);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Client> updateClient(final String clientName,
-                                               final String newClientName) {
-        Client updatedClient = service.updateClient(clientName, newClientName);
-        return ResponseEntity.ok(updatedClient);
+
+    @PostMapping(value = "/{nameOfClient}", params = "_method=PATCH")
+    public String updateCountry(final @PathVariable String nameOfClient,
+                                final @Valid
+                                @ModelAttribute("client")
+                                ClientDto clientDto,
+                                final BindingResult bindingResult,
+                                final RedirectAttributes redirectAttributes) {
+        service.updateClient(nameOfClient, clientDto);
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().
+                    forEach(error -> redirectAttributes.
+                            addFlashAttribute("errorMessage",
+                                    error.getDefaultMessage()));
+            return "redirect:/clients/update" + nameOfClient;
+        }
+
+
+        redirectAttributes.addFlashAttribute(
+                "successMessage", "Client updated successfully");
+        return "redirect:/clients";
     }
+
+
+    @GetMapping("/update/{nameOfClient}")
+    public String showUpdateForm(final @PathVariable String nameOfClient,
+                                 final Model model) {
+        ClientDto clientDto = service.findByClientName(nameOfClient);
+        if (clientDto == null) {
+            model.addAttribute("errorMessage",
+                    "Клиент" + nameOfClient + " не найден");
+            return "redirect:/clients";
+        }
+        model.addAttribute("client", clientDto);
+        return "updateClient";
+    }
+
+
+
+
+
+
+
+
 
     @PostMapping(value = "/{nameOfClient}", params = "_method=DELETE")
     public String deleteClient(@PathVariable final String nameOfClient, final Model model) {
