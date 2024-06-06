@@ -1,7 +1,7 @@
 spring:
   datasource:
     #url: jdbc:postgresql://localhost:5432/Calories
-    url: jdbc:postgres://kaplich_postgresql_calories_user:4HIEkVKtW4VUNnCyhHeRsfJndgOJkTGm@dpg-cpc85scf7o1s738c9gu0-a/kaplich_postgresql_calories
+    url: jdbc:postgres://kaplich_postgresql_calories_user:4HIEkVKtW4VUNnCyhHeRsfJndgOJkTGm@dpg-cpc85scf7o1s738c9gu0-a.oregon-postgres.render.com/kaplich_postgresql_calories
     username: postgres
     password: 4HIEkVKtW4VUNnCyhHeRsfJndgOJkTGm
     driver-class-name: org.postgresql.Driver
