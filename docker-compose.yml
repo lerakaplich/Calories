@@ -1,0 +1,62 @@
+#version: '3.8'
+#
+#services:
+#  db-container:
+#    image: postgres:latest
+#    container_name: db-container
+#    restart: always
+#    networks:
+#      - my-network
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 123
+#      POSTGRES_DB: Calories
+#    volumes:
+#      - C:/test :/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#
+#  backend-service:
+#    build: ./
+#    image: backend-service:latest
+#    container_name: backend-service
+#    restart: always
+#    networks:
+#      - my-network
+#    depends_on:
+#      - db-container
+#    environment:
+#      DATABASE_URL: db-container:5432
+#    volumes:
+#    - ./app-log:/app/logs
+#    ports:
+#      - "8080:8080"
+#networks:
+#  my-network:
+#    driver: bridge
+version: '3.9'
+
+services:
+  db:
+    image: 'postgres'
+    container_name: db
+    restart: always
+    env_file: ./.env
+    ports:
+      - '5432:5432'
+    networks:
+      - text-network
+
+  app:
+    image: 8d508bf60d77
+    ports:
+      - '8080:8080'
+    env_file: ./.env
+    depends_on:
+      - db
+    networks:
+      - text-network
+
+networks:
+  text-network:
+    driver: bridge
