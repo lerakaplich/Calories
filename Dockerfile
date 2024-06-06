@@ -20,8 +20,7 @@
 #COPY --from=build /app/target/*.jar /app/web.jar
 #
 #EXPOSE 8080
-#
-#CMD ["java", "-jar", "web.jar"]
+
 
 FROM openjdk:21
 COPY target/*.jar app.jar
